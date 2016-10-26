@@ -7,18 +7,12 @@ const DataRow = require('./DataRow');
 const { initScraper, scrapeController} = require('../server/scrape-controller');
 
 
-
-// Factbook file path below
-const factbook = '';
-
-// Feed contains multiple FeedItems
-// Put AJAX in this Component
 class Display extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activeCountry: 'us',
-      activeCategory: 'Politics',
+      activeCategory: 'Politics, Economics, Society and Geopolitics',
       qualCountryData: []
     }
     // this.componentDidMount = this.componentDidMount.bind(this);
@@ -94,7 +88,7 @@ segmentQualData(data) {
   render() {
     const styles = {
       container: {
-        background: 'gray',
+        background: '#D9B310',
         border: '2px solid black',
         fontFamily: 'Arial',
         // width: '100%',

@@ -3,12 +3,12 @@ const React = require('react');
 const DisplayHeaders = ({toggleCategory, activeCategory}) => {
   const styles = {
     category: {
-      background: 'blue',
-      fontFamily: 'Arial'
+      fontFamily: 'Arial',
+      textAlign: 'center'
     },
     quantqual: {
       fontFamily: 'Arial',
-      width: '50%'
+      textAlign: 'center'
     }
   }
   return (
@@ -20,8 +20,8 @@ const DisplayHeaders = ({toggleCategory, activeCategory}) => {
     </div>
     <div>
       <div style = {styles.quantqual}>Qualitative Data</div>
-      <div style = {styles.quantqual}>Quantitative Data</div>
     </div>
+    <hr />
     </div>
   )
 }
