@@ -12,11 +12,7 @@ const userController = require('./userController');
 // });
 
 const app = express();
-app.use((req, res, next) => {
-  console.log(req.url)
-  console.log(req.method)
-  next();
-})
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Find valid uri
 
@@ -24,6 +20,11 @@ app.use((req, res, next) => {
 // mongoose.connect(mongoURI);
 
 // app.use(express.static(__dirname +'./../client'));
+
+app.get('/', (req, res) => {
+  res.write(fs.readFileSync(path.join(__dirname, '../index.html')));
+  res.end();
+});
 
 app.get('/signup', (req, res) => {
   res.write(fs.readFileSync(path.join(__dirname, '../client/signup.html')));
@@ -35,9 +36,11 @@ app.get('/login', (req, res) => {
   res.end();
 });
 
+
+
 app.post('/signup', userController.createUser);
 
-app.post('/login', userController.verifyUser);
+// app.post('/login', userController.verifyUser);
 
 app.listen(3000, () => console.log('listening...'));
 

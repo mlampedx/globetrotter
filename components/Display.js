@@ -297,7 +297,7 @@ segmentQualData(data) {
           <option value="za">Zambia</option>
           <option value="zi">Zimbabwe</option>
         </select>
-        <button onClick = {() => this.segmentQualData(initScraper(this.state.activeCountry))} >View data</button>
+        <button className = 'btn-primary' onClick = {() => this.segmentQualData(initScraper(this.state.activeCountry))} >View data</button>
         <DisplayHeaders 
           toggleCategory = {this.toggleCategory} 
           activeCategory = {this.state.activeCategory}

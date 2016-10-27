@@ -10,7 +10,7 @@ const DataRow = ({ data }) => {
     <div>
       <span className = 'DataRow' style = { styles.row } >{data.name}: {data.value}.</span>
       <br />
-      <button>Save</button>
+      <button className = 'btn-primary'>Save</button>
       <hr />
     </div>
   )
