@@ -2,6 +2,7 @@ const json = require('json-loader');
 // const data = require('json!../factbook/us.json');
 
 const initScraper = (countryCode) => {
+  console.log('initiating scraping')
   let file = countryCode + '.json';
   let data = require('json!../factbook/' + file);
   return scrapeController(data);
