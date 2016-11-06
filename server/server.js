@@ -4,44 +4,20 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const userController = require('./userController');
-// const bcrypt = require('bcrypt');
-
-// mongoose.connect('mongodb://localhost/globetrotter');
-// mongoose.connection.once('open', () => {
-//   console.log('Connected with MongoDB ORM - Globetrotter');
-// });
 
 const app = express();
-app.use(bodyParser.urlencoded({extended: true}));
 
-// Find valid uri
-
-// const mongoURI = 'mongodb://localhost/globetrotter';
-// mongoose.connect(mongoURI);
-
-// app.use(express.static(__dirname +'./../client'));
+app.use(express.static(path.join(__dirname, './../client')));
+app.use(express.static(path.join(__dirname, './../build')));
 
 app.get('/', (req, res) => {
-  res.write(fs.readFileSync(path.join(__dirname, '../index.html')));
-  res.end();
+  return res.status(200).sendFile(path.join(__dirname, './../client/index.html'));
+})
+
+app.get('/build/webpack-bundle.js', (req, res, next) => {
+	return res.status(200).sendFile(path.join(__dirname, './../build/webpack-bundle.js'));
 });
 
-app.get('/signup', (req, res) => {
-  res.write(fs.readFileSync(path.join(__dirname, '../client/signup.html')));
-  res.end();
-});
-
-app.get('/login', (req, res) => {
-  res.write(fs.readFileSync(path.join(__dirname, '../client/login.html')));
-  res.end();
-});
-
-
-
-app.post('/signup', userController.createUser);
-
-// app.post('/login', userController.verifyUser);
-
-app.listen(3000, () => console.log('listening...'));
+app.listen(3000, () => console.log('listening on port 3000'));
 
 module.exports = app;

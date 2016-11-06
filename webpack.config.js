@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: './index.js',
+  entry: './client/index.js',
   output: {
     path: __dirname,
     filename: './build/webpack-bundle.js',
@@ -12,7 +12,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
-    loaders: [
+    loaders: [  
       {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -36,8 +36,8 @@ module.exports = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('./client/stylesheets/styles.css', {
+    new ExtractTextPlugin('./client/styles.css', {
       allChunks: true
-    })
+    }),
   ]
 };
