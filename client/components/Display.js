@@ -4,7 +4,7 @@ const DisplayHeaders = require('./DisplayHeaders');
 const CountrySelector = require('./CountrySelector');
 const DataColumn = require('./DataColumn');
 const DataRow = require('./DataRow');
-const { initScraper, scrapeController } = require('./../../server/scrape-controller');
+const { initScraper } = require('./../../server/scrape-controller');
 
 
 class Display extends React.Component {
@@ -12,8 +12,8 @@ class Display extends React.Component {
     super(props);
     this.state = {
       activeCountry: 'us',
-      activeCategory: 'Politics, Economics, Society and Geopolitics',
-      qualCountryData: []
+      activeCategory: 'all',
+      qualCountryData: {}
     }
     // this.componentDidMount = this.componentDidMount.bind(this);
     this.toggleCategory = this.toggleCategory.bind(this);
@@ -21,37 +21,14 @@ class Display extends React.Component {
     this.segmentQualData = this.segmentQualData.bind(this);
   } 
 
-  // componentDidMount() {
-
-  //   // Console.log result and examine data to determine what is needed
-  //   $.get(this.props.feedUrl, function (result) {
-  //     this.setState({
-  //       urls: result
-  //     })
-  //   }.bind(this))
-  // }
-
-toggleCategory() {
-    const categories = [Politics, Economics, Society, Geopolitics];
-    let i = 0;
-
-    if (i < 3) {
-      i++;
-    }
-
-    else if (i === 3) {
-      i = 0;
-    }
-
-   let newState = {};
-   Object.assign(newState, this.state);
-   newState.activeCategory = categories[i];
-   this.setState({newState});
+toggleCategory(category) {
+  this.setState({activeCategory: category});
+  console.log(this.state.activeCategory);
 }
 
 toggleCountry(e) {
-  this.setState({activeCountry: e.target.value, qualCountryData: []}, () => console.log(this.activeCountry));
-  console.log(this.state.activeCountry)
+  this.setState({activeCountry: e.target.value});
+  console.log(this.state.activeCountry);
 }
 
 segmentQualData(data) {
@@ -60,29 +37,30 @@ segmentQualData(data) {
   let qualSocDataRows = [];
   let qualGeoDataRows = [];
 
-    for (let i = 0; i < 7; i++) {
-      qualPolDataRows.push(<DataRow data = {data[i]} key={i} />)
+    for (let i = 0; i < data.Pol.length; i++) {
+      qualPolDataRows.push(<DataRow data = {data.Pol[i]} key={i} />)
     }
 
-    for (let i = 7; i < 15; i++) {
-      qualEconDataRows.push(<DataRow data = {data[i]} key={i} />)
+    for (let i = 0; i < data.Econ.length; i++) {
+      qualEconDataRows.push(<DataRow data = {data.Econ[i]} key={i} />)
     }
 
-    for (let i = 15; i < 18; i++) {
-      qualSocDataRows.push(<DataRow data = {data[i]} key={i} />)
+    for (let i = 0; i < data.Soc.length; i++) {
+      qualSocDataRows.push(<DataRow data = {data.Soc[i]} key={i} />)
     }
 
-    for (let i = 18; i < 25; i++) {
-      qualGeoDataRows.push(<DataRow data = {data[i]} key={i} />)
+    for (let i = 0; i < data.Geo.length; i++) {
+      qualGeoDataRows.push(<DataRow data = {data.Geo[i]} key={i} />)
     } 
 
     let newState = {};
     Object.assign(newState, this.state);
-    newState.qualCountryData.push(qualPolDataRows);
-    newState.qualCountryData.push(qualEconDataRows);
-    newState.qualCountryData.push(qualSocDataRows);
-    newState.qualCountryData.push(qualGeoDataRows);
+    newState.qualCountryData.Pol = qualPolDataRows;
+    newState.qualCountryData.Econ = qualEconDataRows;
+    newState.qualCountryData.Soc = qualSocDataRows;
+    newState.qualCountryData.Geo = qualGeoDataRows;
     this.setState({newState});
+    console.log(this.state.qualCountryData)
 }
 
   render() {
@@ -110,17 +88,11 @@ segmentQualData(data) {
           toggleCategory = {this.toggleCategory} 
           activeCategory = {this.state.activeCategory}
         />
-        <DataColumn
-          qualDataRows = {this.state.qualCountryData[0]}
-        />
-        <DataColumn
-          qualDataRows = {this.state.qualCountryData[1]}
-        />
-        <DataColumn
-          qualDataRows = {this.state.qualCountryData[2]}
-        />
-        <DataColumn
-          qualDataRows = {this.state.qualCountryData[3]}
+        <DataColumn 
+          qualPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.qualCountryData.Pol : []}
+          qualEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.qualCountryData.Econ : []}
+          qualSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.qualCountryData.Soc : []}
+          qualGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.qualCountryData.Geo : []}       
         />
       </div>
         );
@@ -128,3 +100,18 @@ segmentQualData(data) {
 }
 
 module.exports = Display;
+
+        //
+        // <DataColumn className = 'QualPolCol'
+        //   qualPolDataRows = {this.state.qualCountryData.Pol}
+        // />
+        // <DataColumn className = 'QualEconCol'
+        //   qualEconDataRows = {this.state.qualCountryData.Econ}
+        // />
+        // <DataColumn className = 'QualSocCol'
+        //   qualSocDataRows = {this.state.qualCountryData.Soc}
+        // />
+        // <DataColumn className = 'QualGeoCol'
+        //   qualGeoDataRows = {this.state.qualCountryData.Geo}
+        // />
+
