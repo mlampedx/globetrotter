@@ -5,10 +5,15 @@ const initScraper = (countryCode) => {
   console.log('initiating scraping')
   let file = countryCode + '.json';
   let data = require('json!../factbook/' + file);
-  return scrapeController(data);
+  let qualCountryData = {}
+  qualCountryData.Pol = scrapeControllerPol(data);
+  qualCountryData.Econ = scrapeControllerEcon(data);
+  qualCountryData.Soc = scrapeControllerSoc(data);
+  qualCountryData.Geo = scrapeControllerGeo(data);
+  return qualCountryData;
 }
 
-const scrapeController = (data) => {
+const scrapeControllerPol = (data) => {
 let output = [];
 
 if (data['Government']['Government type'] !== undefined) {
@@ -47,7 +52,14 @@ if (data['Government']['Political parties and leaders']  !== undefined) {
   output.push({ name: 'Political Parties and Leaders', value: data['Government']['Political parties and leaders']['text'] });
 }
 
+console.log('politics successfully parsed')
+return output;
+}
+
 // QUALITATIVE ECONOMIC DATA FROM CIA WORLD FACTBOOK
+
+const scrapeControllerEcon = (data) => {
+let output = [];
 
 if (data['Economy']['Economy - overview'] !== undefined) {
   output.push({ name: 'Economy - Overview', value: data['Economy']['Economy - overview']['text'] });
@@ -81,7 +93,15 @@ if (data['Transportation']['Ports and terminals']['cargo ports (tonnage)'] !== u
   output.push({ name: 'Ports and Terminals', value: data['Transportation']['Ports and terminals']['cargo ports (tonnage)']['text'] });
 }
 
+console.log('econ successfully parsed')
+
+return output;
+}
+
 // QUALITATIVE SOCIAL DATA FROM CIA WORLD FACTBOOK
+
+const scrapeControllerSoc = (data) => {
+let output = [];
 
 if (data['People and Society']['Ethnic groups'] !== undefined) {
   output.push({ name: 'People and Society', value: data['People and Society']['Ethnic groups']['text'] });
@@ -95,7 +115,15 @@ if (data['Communications']['Broadcast media'] !== undefined) {
   output.push({ name: 'Broadcast Media', value: data['Communications']['Broadcast media']['text'] });
 }
 
+console.log('soc successfully parsed')
+
+return output;
+}
+
 // QUALITATIVE GEOPOLITICAL DATA FROM CIA WORLD FACTBOOK
+
+const scrapeControllerGeo = (data) => {
+let output = [];
 
 if (data['Geography']['Location'] !== undefined) {
   output.push({ name: 'Location', value: data['Geography']['Location']['text'] });
@@ -125,49 +153,9 @@ if (data['Geography']['Natural hazards'] !== undefined) {
   output.push({ name: 'Natural Hazards', value: data['Geography']['Natural hazards']['text'] });
 }
 
-// console.log(output);
+console.log('geo successfully parsed')
+
 return output;
 }
 
-module.exports = { initScraper, scrapeController };
-
-// WITHOUT IF STATEMENT VERSION BELOW
-
-// QUALITATIVE POLITICAL DATA FROM CIA WORLD FACTBOOK
-
-// output.push({ name: 'Government Type', value: data['Government']['Government type']['text'] })
-// output.push({ name: 'Administrative Divisions', value: data['Government']['Administrative divisions']['text'] });
-// output.push({ name: 'Constitution', value: data['Government']['Constitution']['text'] });
-// output.push({ name: 'Legal System', value: data['Government']['Legal system']['text'] });
-// output.push({ name: 'Executive Branch', value: data['Government']['Executive branch']['chief of state']['text'] });
-// output.push({ name: 'Executive Branch', value: data['Government']['Executive branch']['head of government']['text'] });
-// output.push({ name: 'Legislative Branch', value: data['Government']['Legislative branch']['description']['text'] });
-// output.push({ name: 'Judicial Branch', value: data['Government']['Judicial branch']['highest court(s)']['text'] });
-// output.push({ name: 'Political Parties and Leaders', value: data['Government']['Political parties and leaders']['text'] });
-
-// // QUALITATIVE ECONOMIC DATA FROM CIA WORLD FACTBOOK
-
-// output.push({ name: 'Economy - Overview', value: data['Economy']['Economy - overview']['text'] });
-// output.push({ name: 'Natural Resources', value: data['Geography']['Natural resources']['text'] });
-// output.push({ name: 'Agriculture - Products', value: data['Economy']['Agriculture - products']['text'] });
-// output.push({ name: 'Industries', value: data['Economy']['Industries']['text'] });
-// output.push({ name: 'Exports - Commodities', value: data['Economy']['Exports - commodities']['text'] });
-// output.push({ name: 'Imports - Commodities', value: data['Economy']['Imports - commodities']['text'] });
-// output.push({ name: 'Public Debt', value: data['Economy']['Public debt']['text'] });
-// output.push({ name: 'Ports and Terminals', value: data['Transportation']['Ports and terminals']['cargo ports (tonnage)']['text'] });
-
-// // QUALITATIVE SOCIAL DATA FROM CIA WORLD FACTBOOK
-
-// output.push({ name: 'People and Society', value: data['People and Society']['Ethnic groups']['text'] });
-// output.push({ name: 'Political Pressure Groups and Leaders', value: data['Government']['Political pressure groups and leaders']['other']['text'] });
-// output.push({ name: 'Broadcast Media', value: data['Communications']['Broadcast media']['text'] });
-
-// // QUALITATIVE GEOPOLITICAL DATA FROM CIA WORLD FACTBOOK
-
-// output.push({ name: 'Location', value: data['Geography']['Location']['text'] });
-// output.push({ name: 'Coordinates', value: data['Government']['Capital']['geographic coordinates']['text'] });
-// output.push({ name: 'Military', value: data['Military']['Military branches']['text'] });
-// output.push({ name: 'Transnational Issues', value: data['Transnational Issues']['Disputes - international']['text'] });
-// output.push({ name: 'Refugees and Internally Displaced Persons', value: data['Transnational Issues']['Refugees and internally displaced persons']['refugees (country of origin)']['text'] });
-// output.push({ name: 'Illicit Drugs', value: data['Transnational Issues']['Illicit drugs']['text'] });
-// output.push({ name: 'Natural Hazards', value: data['Geography']['Natural hazards']['text'] });
+module.exports = { initScraper };

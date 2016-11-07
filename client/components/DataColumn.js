@@ -1,7 +1,7 @@
 const React = require('react');
 const DataRow = require('./DataRow');
 
-const DataColumn = ({ qualDataRows }) => {
+const DataColumn = ({ qualPolDataRows, qualEconDataRows, qualSocDataRows, qualGeoDataRows }) => {
   const styles = {
     outerDiv: {
       display: 'grid'
@@ -12,14 +12,20 @@ const DataColumn = ({ qualDataRows }) => {
   }
   return (
     <div style = {styles.outerDiv}>
-      <div className='DataColumn' style = { styles.col }>{ qualDataRows }</div>
+      <div className='DataColumn' style = { styles.col }>{ qualPolDataRows }</div>
+      <div className='DataColumn' style = { styles.col }>{ qualEconDataRows }</div>
+      <div className='DataColumn' style = { styles.col }>{ qualSocDataRows }</div>
+      <div className='DataColumn' style = { styles.col }>{ qualGeoDataRows }</div>
     </div>
   )
 }
 
-DataColumn.propTypes = {
-  qualDataRows: React.PropTypes.array.isRequired
-}
+// DataColumn.propTypes = {
+//   qualPolDataRows: React.PropTypes.array.isRequired,
+//   qualEconDataRows: React.PropTypes.array.isRequired,
+//   qualSocDataRows: React.PropTypes.array.isRequired,
+//   qualGeoDataRows: React.PropTypes.array.isRequired
+// }
 
 module.exports = DataColumn;
 

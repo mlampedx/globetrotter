@@ -8,7 +8,6 @@ const userController = require('./userController');
 const app = express();
 
 app.use(express.static(path.join(__dirname, './../client')));
-app.use(express.static(path.join(__dirname, './../build')));
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, './../client/index.html'));
