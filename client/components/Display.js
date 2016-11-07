@@ -55,6 +55,7 @@ segmentQualData(data) {
 
     let newState = {};
     Object.assign(newState, this.state);
+    newState.activeCategory = 'all';
     newState.qualCountryData.Pol = qualPolDataRows;
     newState.qualCountryData.Econ = qualEconDataRows;
     newState.qualCountryData.Soc = qualSocDataRows;
