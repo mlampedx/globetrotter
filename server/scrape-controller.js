@@ -89,8 +89,10 @@ if (data['Economy']['Public debt'] !== undefined) {
   output.push({ name: 'Public Debt', value: data['Economy']['Public debt']['text'] });
 }
 
-if (data['Transportation']['Ports and terminals']['cargo ports (tonnage)'] !== undefined) {
-  output.push({ name: 'Ports and Terminals', value: data['Transportation']['Ports and terminals']['cargo ports (tonnage)']['text'] });
+if (data['Transportation']['Ports and terminals'] !== undefined) {
+  if (data['Transportation']['Ports and terminals']['cargo ports (tonnage)'] !== undefined) {
+    output.push({ name: 'Ports and Terminals', value: data['Transportation']['Ports and terminals']['cargo ports (tonnage)']['text'] });
+  }
 }
 
 console.log('econ successfully parsed')
@@ -107,8 +109,10 @@ if (data['People and Society']['Ethnic groups'] !== undefined) {
   output.push({ name: 'People and Society', value: data['People and Society']['Ethnic groups']['text'] });
 }
 
-if (data['Government']['Political pressure groups and leaders']['other'] !== undefined) {
-  output.push({ name: 'Political Pressure Groups and Leaders', value: data['Government']['Political pressure groups and leaders']['other']['text'] });
+if (data['Government']['Political pressure groups and leaders'] !== undefined) {
+  if (data['Government']['Political pressure groups and leaders']['other'] !== undefined) {
+    output.push({ name: 'Political Pressure Groups and Leaders', value: data['Government']['Political pressure groups and leaders']['other']['text'] });
+  }
 }
 
 if (data['Communications']['Broadcast media'] !== undefined) {
@@ -142,7 +146,9 @@ if (data['Transnational Issues']['Disputes - international'] !== undefined) {
 }
 
 if (data['Transnational Issues']['Refugees and internally displaced persons'] !== undefined) {
-  output.push({ name: 'Refugees and Internally Displaced Persons', value: data['Transnational Issues']['Refugees and internally displaced persons']['refugees (country of origin)']['text'] });
+  if (data['Transnational Issues']['Refugees and internally displaced persons']['refugees (country of origin)'] !== undefined) {
+    output.push({ name: 'Refugees and Internally Displaced Persons', value: data['Transnational Issues']['Refugees and internally displaced persons']['refugees (country of origin)']['text'] });
+  }
 }
 
 if (data['Transnational Issues']['Illicit drugs'] !== undefined) {
