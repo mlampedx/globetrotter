@@ -100,18 +100,3 @@ segmentQualData(data) {
 }
 
 module.exports = Display;
-
-        //
-        // <DataColumn className = 'QualPolCol'
-        //   qualPolDataRows = {this.state.qualCountryData.Pol}
-        // />
-        // <DataColumn className = 'QualEconCol'
-        //   qualEconDataRows = {this.state.qualCountryData.Econ}
-        // />
-        // <DataColumn className = 'QualSocCol'
-        //   qualSocDataRows = {this.state.qualCountryData.Soc}
-        // />
-        // <DataColumn className = 'QualGeoCol'
-        //   qualGeoDataRows = {this.state.qualCountryData.Geo}
-        // />
-
