@@ -1,8 +1,8 @@
 const json = require('json-loader');
 // const data = require('json!../factbook/us.json');
 
-const initScraper = (countryCode) => {
-  console.log('initiating scraping')
+const initQualScraper = (countryCode) => {
+  console.log('initiating factbook scraping')
   let file = countryCode + '.json';
   let data = require('json!../factbook/' + file);
   let qualCountryData = {}
@@ -164,4 +164,4 @@ console.log('geo successfully parsed')
 return output;
 }
 
-module.exports = { initScraper };
+module.exports = { initQualScraper };
