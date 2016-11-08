@@ -4,14 +4,15 @@ const DisplayHeaders = require('./DisplayHeaders');
 const CountrySelector = require('./CountrySelector');
 const DataColumn = require('./DataColumn');
 const DataRow = require('./DataRow');
-const { initScraper } = require('./../../server/scrape-controller');
+const { initQualScraper } = require('./../../server/factbook-scrape-controller');
+// const { initQuantScraper } = require('./../../server/worldbank-scrape-controller');
 
 
 class Display extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeCountry: 'us',
+      activeCountry: 'us-usa',
       activeCategory: 'all',
       qualCountryData: {}
     }
@@ -55,6 +56,7 @@ segmentQualData(data) {
 
     let newState = {};
     Object.assign(newState, this.state);
+    newState.activeCategory = 'all';
     newState.qualCountryData.Pol = qualPolDataRows;
     newState.qualCountryData.Econ = qualEconDataRows;
     newState.qualCountryData.Soc = qualSocDataRows;
@@ -62,6 +64,11 @@ segmentQualData(data) {
     this.setState({newState});
     console.log(this.state.qualCountryData)
 }
+
+  // segmentQuantData(data) {
+  //   console.log('quantitative data:', data)
+  //   return
+  // }
 
   render() {
     const styles = {
@@ -82,7 +89,9 @@ segmentQualData(data) {
           activeCountry={this.state.activeCountry} 
           toggleCountry={this.toggleCountry} 
           segmentQualData={this.segmentQualData} 
-          initScraper={initScraper}
+          // segmentQuantData={this.segmentQuantData}
+          initQualScraper={initQualScraper}
+          // initQuantScraper={initQuantScraper}
         />
         <DisplayHeaders 
           toggleCategory = {this.toggleCategory} 
