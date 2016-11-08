@@ -8,9 +8,6 @@ module.exports = {
     path: __dirname,
     filename: './build/webpack-bundle.js',
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ],
   module: {
     loaders: [  
       {

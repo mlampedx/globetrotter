@@ -74,9 +74,6 @@ segmentQualData(data) {
         flexDirection: 'column',
         padding: '10px',
       },
-      nav: {
-        display: 'inline'
-      },
       login: {
         display: 'inline-block',
         float: 'left'
@@ -94,10 +91,6 @@ segmentQualData(data) {
 
     return (
       <div className='Display' styles = { styles.container }>
-        <div styles = { styles.nav }>
-          <button className='btn-info' styles = { styles.login }><Link to='/login'>Login</Link></button>
-          <button className='btn-info' styles = { styles.profile }><Link to='/profile'>Profile</Link></button>
-        </div>
         <img styles = { styles.img } src='globe.png' />
         <CountrySelector
           activeCountry={this.state.activeCountry} 
