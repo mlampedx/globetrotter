@@ -5,6 +5,9 @@ const CountrySelector = require('./CountrySelector');
 const DataColumn = require('./DataColumn');
 const DataRow = require('./DataRow');
 const { initQualScraper } = require('./../../server/factbook-scrape-controller');
+import { Link } from 'react-router';
+import Login from './Login';
+import Profile from './Profile';
 // const { initQuantScraper } = require('./../../server/worldbank-scrape-controller');
 
 
@@ -37,32 +40,22 @@ segmentQualData(data) {
   let qualEconDataRows = [];
   let qualSocDataRows = [];
   let qualGeoDataRows = [];
+  let newState = {};
 
-    for (let i = 0; i < data.Pol.length; i++) {
-      qualPolDataRows.push(<DataRow data = {data.Pol[i]} key={i} />)
-    }
+  data.Pol.forEach((statistic, i) => qualPolDataRows.push(<DataRow data = {statistic} key={i} />));
+  data.Econ.forEach((statistic, i) => qualEconDataRows.push(<DataRow data = {statistic} key={i} />));
+  data.Soc.forEach((statistic, i) => qualSocDataRows.push(<DataRow data = {statistic} key={i} />));
+  data.Geo.forEach((statistic, i) => qualGeoDataRows.push(<DataRow data = {statistic} key={i} />));
 
-    for (let i = 0; i < data.Econ.length; i++) {
-      qualEconDataRows.push(<DataRow data = {data.Econ[i]} key={i} />)
-    }
 
-    for (let i = 0; i < data.Soc.length; i++) {
-      qualSocDataRows.push(<DataRow data = {data.Soc[i]} key={i} />)
-    }
-
-    for (let i = 0; i < data.Geo.length; i++) {
-      qualGeoDataRows.push(<DataRow data = {data.Geo[i]} key={i} />)
-    } 
-
-    let newState = {};
-    Object.assign(newState, this.state);
+  Object.assign(newState, this.state);
     newState.activeCategory = 'all';
     newState.qualCountryData.Pol = qualPolDataRows;
     newState.qualCountryData.Econ = qualEconDataRows;
     newState.qualCountryData.Soc = qualSocDataRows;
     newState.qualCountryData.Geo = qualGeoDataRows;
-    this.setState({newState});
-    console.log(this.state.qualCountryData)
+      this.setState({newState});
+      console.log(this.state.qualCountryData)
 }
 
   // segmentQuantData(data) {
@@ -80,11 +73,32 @@ segmentQualData(data) {
         // display: 'flex',
         flexDirection: 'column',
         padding: '10px',
+      },
+      nav: {
+        display: 'inline'
+      },
+      login: {
+        display: 'inline-block',
+        float: 'left'
+      },
+      profile: {
+        display: 'inline-block',
+        float: 'right'
+      },
+      img: {
+        display: 'block',
+        marginLeft: 'auto',
+        marginRight: 'auto'
       }
     }
 
     return (
-      <div className='Display' style = {styles.container}>
+      <div className='Display' styles = { styles.container }>
+        <div styles = { styles.nav }>
+          <button className='btn-info' styles = { styles.login }><Link to='/login'>Login</Link></button>
+          <button className='btn-info' styles = { styles.profile }><Link to='/profile'>Profile</Link></button>
+        </div>
+        <img styles = { styles.img } src='globe.png' />
         <CountrySelector
           activeCountry={this.state.activeCountry} 
           toggleCountry={this.toggleCountry} 

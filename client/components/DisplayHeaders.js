@@ -45,6 +45,7 @@ const DisplayHeaders = ({toggleCategory, activeCategory}) => {
       }
     },
     quantqual: {
+      color: 'white',
       fontFamily: 'Arial',
       textAlign: 'center'
     }
