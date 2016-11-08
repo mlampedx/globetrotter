@@ -3,6 +3,7 @@ const React = require('react');
 const DataRow = ({ data }) => {
   const styles = {
     row: {
+      color: 'white',
       fontFamily: 'Arial'
     }
   }
