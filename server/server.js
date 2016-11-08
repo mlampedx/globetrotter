@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const passport = require('passport');
-const creds = require('../app.config');
+const creds = require('./../app.config');
 const AuthenticationController = require('./AuthenticationController.js');
 
 const app = express();
@@ -93,21 +93,31 @@ app.get('/auth/google/callback', (
 		failureRedirect: '/login'
 	})));
 
-
-
 app.use(express.static(path.join(__dirname, './../client')));
 
-app.get('/login', (req, res) => {
-  return res.status(200).sendFile(path.join(__dirname, './../client/login.html'));
-})
-
-app.get('/', AuthenticationController.isAuthenticated, (req, res) => {
+app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, './../client/index.html'));
 })
 
 app.get('/build/webpack-bundle.js', (req, res, next) => {
 	return res.status(200).sendFile(path.join(__dirname, './../build/webpack-bundle.js'));
 });
+
+app.get('loadProfile:id', (req, res, next) => {
+	User.findOne({'google_id': Number(req.params.id.slice(1))}, (err, user) => {
+    if (err || user === null) {
+      res.status(404).send('User not found in db');
+    }
+    else {
+			res.body.profile = {
+				google_id: user.google_id,
+				username: user.username,
+				saved_data: user.saved_data
+			}
+      res.status(200).end();              C
+    }
+  })
+})
 
 app.listen(3000, () => console.log('listening on port 3000'));
 

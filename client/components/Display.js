@@ -17,7 +17,8 @@ class Display extends React.Component {
     this.state = {
       activeCountry: 'us-usa',
       activeCategory: 'all',
-      qualCountryData: {}
+      qualCountryData: {},
+      google_id: document.cookie.replace(/(?:(?:^|.*;\s*)google_id\s*\=\s*([^;]*).*$)|^.*$/, "$1")
     }
     // this.componentDidMount = this.componentDidMount.bind(this);
     this.toggleCategory = this.toggleCategory.bind(this);
