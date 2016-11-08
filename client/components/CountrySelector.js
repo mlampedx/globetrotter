@@ -1,10 +1,10 @@
 const React = require('react');
 
-const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, initScraper }) => {
+const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, segmentQuantData, initQualScraper, initQuantScraper }) => {
   return (
     <div>
       <select className = "CountrySelector" onChange = { toggleCountry } value={ activeCountry }>
-          <option value="us">United States</option>
+          <option value="us-usa">United States</option>
           <option value="af">Afghanistan</option>
           <option value="al">Albania</option>
           <option value="ag">Algeria</option>
@@ -200,7 +200,12 @@ const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, initSc
           <option value="za">Zambia</option>
           <option value="zi">Zimbabwe</option>
         </select>
-      <button className = 'btn-primary' onClick = { () => segmentQualData(initScraper(activeCountry)) } >View data</button>
+      <button 
+        className = 'btn-primary' 
+        onClick = { () => segmentQualData(initQualScraper(activeCountry.slice(0, 2))) } 
+        // onClick = { () => segmentQuantData(initQuantScraper(activeCountry.slice(-3))) } >
+        >View data
+        </button>
     </div>
   );
 };
@@ -209,7 +214,9 @@ CountrySelector.propTypes = {
   toggleCountry: React.PropTypes.func.isRequired,
   activeCountry: React.PropTypes.string.isRequired,
   segmentQualData: React.PropTypes.func.isRequired,
-  initScraper: React.PropTypes.func.isRequired
+  // segmentQuantData: React.PropTypes.func.isRequired,
+  initQualScraper: React.PropTypes.func.isRequired,
+  // initQuantScraper: React.PropTypes.func.isRequired
 }
 
 module.exports = CountrySelector;
