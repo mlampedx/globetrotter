@@ -5,6 +5,7 @@ const CountrySelector = require('./CountrySelector');
 const DataColumn = require('./DataColumn');
 const DataRow = require('./DataRow');
 const { initQualScraper } = require('./../../server/factbook-scrape-controller');
+import { updateCategory, updateCountry, updateQualData } from './../redux/actionCreators';
 import { Link } from 'react-router';
 import Login from './Login';
 import Profile from './Profile';
@@ -14,25 +15,35 @@ import Profile from './Profile';
 class Display extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      activeCountry: 'us-usa',
-      activeCategory: 'all',
-      qualCountryData: {},
-      google_id: document.cookie.replace(/(?:(?:^|.*;\s*)google_id\s*\=\s*([^;]*).*$)|^.*$/, "$1")
-    }
-    // this.componentDidMount = this.componentDidMount.bind(this);
+    // this.state = {
+    //   activeCountry: 'us-usa',
+    //   activeCategory: 'all',
+    //   qualCountryData: {},
+    //   google_id: document.cookie.replace(/(?:(?:^|.*;\s*)google_id\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+    // }
     this.toggleCategory = this.toggleCategory.bind(this);
     this.toggleCountry = this.toggleCountry.bind(this);
     this.segmentQualData = this.segmentQualData.bind(this);
   } 
 
+  componentDidMount() {
+    const { store } = this.context;
+    this.unsubscribe = store.subscribe(() => this.forceUpdate());
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  
 toggleCategory(category) {
-  this.setState({activeCategory: category});
+  // this.setState({activeCategory: category});
+  props.updateCategory({category: category});
   console.log(this.state.activeCategory);
 }
 
 toggleCountry(e) {
-  this.setState({activeCountry: e.target.value});
+  // this.setState({activeCountry: e.target.value});
+  props.updateCountry({event: e});
   console.log(this.state.activeCountry);
 }
 
@@ -48,15 +59,12 @@ segmentQualData(data) {
   data.Soc.forEach((statistic, i) => qualSocDataRows.push(<DataRow data = {statistic} key={i} />));
   data.Geo.forEach((statistic, i) => qualGeoDataRows.push(<DataRow data = {statistic} key={i} />));
 
+  props.updateCategory({category: 'all'});
+  props.updateQualData({ Pol: qualPolDataRows,
+                         Econ: qualEconDataRows,
+                         Soc: qualSocDataRows,
+                         Geo: qualGeoDataRows });
 
-  Object.assign(newState, this.state);
-    newState.activeCategory = 'all';
-    newState.qualCountryData.Pol = qualPolDataRows;
-    newState.qualCountryData.Econ = qualEconDataRows;
-    newState.qualCountryData.Soc = qualSocDataRows;
-    newState.qualCountryData.Geo = qualGeoDataRows;
-      this.setState({newState});
-      console.log(this.state.qualCountryData)
 }
 
   // segmentQuantData(data) {
@@ -94,7 +102,7 @@ segmentQualData(data) {
       <div className='Display' styles = { styles.container }>
         <img styles = { styles.img } src='globe.png' />
         <CountrySelector
-          activeCountry={this.state.activeCountry} 
+          activeCountry={props.activeCountry} 
           toggleCountry={this.toggleCountry} 
           segmentQualData={this.segmentQualData} 
           // segmentQuantData={this.segmentQuantData}
@@ -103,13 +111,13 @@ segmentQualData(data) {
         />
         <DisplayHeaders 
           toggleCategory = {this.toggleCategory} 
-          activeCategory = {this.state.activeCategory}
+          activeCategory = {props.activeCategory}
         />
         <DataColumn 
-          qualPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.qualCountryData.Pol : []}
-          qualEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.qualCountryData.Econ : []}
-          qualSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.qualCountryData.Soc : []}
-          qualGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.qualCountryData.Geo : []}       
+          qualPolDataRows = {props.activeCategory === 'all' || props.activeCategory === 'Politics' ? props.qualCountryData.Pol : []}
+          qualEconDataRows = {props.activeCategory === 'all' || props.activeCategory === 'Economics' ? props.qualCountryData.Econ : []}
+          qualSocDataRows = {props.activeCategory === 'all' || props.activeCategory === 'Society' ? props.qualCountryData.Soc : []}
+          qualGeoDataRows = {props.activeCategory === 'all' || props.activeCategory === 'Geopolitics' ? props.qualCountryData.Geo : []}       
         />
       </div>
         );
