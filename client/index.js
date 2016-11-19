@@ -13,9 +13,8 @@ import Container from './components/Container';
 class App extends React.Component {
   constructor(props) {
     super(props);
-  }
+  };
   render() {
-    
     return (
       <Router history={hashHistory}>
           <Route path='/' component={Container}>
@@ -28,25 +27,4 @@ class App extends React.Component {
   }
 }
 
-// <Route path="*" component={Display}/>
 ReactDOM.render(<App />, document.getElementById('root'));
-
-
-//   render() {
-
-//   const routes = {
-//     path: '/',
-//     component: App,
-//     indexRoute: { component: Display },
-//     childRoutes: [
-//         { path: '/login', component: Login },
-//         { path: '/profile', component: Profile},
-//         { path: '*', component: Display}
-//     ]
-//     };
-  
-//     return (
-//       <Router history={hashHistory} routes={routes} />
-//     )
-//   }
-// }

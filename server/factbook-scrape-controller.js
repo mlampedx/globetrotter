@@ -3,14 +3,18 @@ const json = require('json-loader');
 
 const initQualScraper = (countryCode) => {
   console.log('initiating factbook scraping')
+  let qualCountryData = {}
+  if (qualCountryData.countryCode !== undefined) {
+    return qualCountryData.countryCode
+  }
+  qualCountryData.countryCode = {};
   let file = countryCode + '.json';
   let data = require('json!../factbook/' + file);
-  let qualCountryData = {}
-  qualCountryData.Pol = scrapeControllerPol(data);
-  qualCountryData.Econ = scrapeControllerEcon(data);
-  qualCountryData.Soc = scrapeControllerSoc(data);
-  qualCountryData.Geo = scrapeControllerGeo(data);
-  return qualCountryData;
+  qualCountryData.countryCode.Pol = scrapeControllerPol(data);
+  qualCountryData.countryCode.Econ = scrapeControllerEcon(data);
+  qualCountryData.countryCode.Soc = scrapeControllerSoc(data);
+  qualCountryData.countryCode.Geo = scrapeControllerGeo(data);
+  return qualCountryData.countryCode;
 }
 
 const scrapeControllerPol = (data) => {
