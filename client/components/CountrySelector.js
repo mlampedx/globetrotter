@@ -1,6 +1,6 @@
 const React = require('react');
 
-const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, segmentQuantData, initQualScraper, initQuantScraper }) => {
+const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, handlePromises, initQualScraper, initQuantScraper }) => {
   return (
     <div>
       <select className = "CountrySelector" onChange = { toggleCountry } value={ activeCountry }>
@@ -202,9 +202,13 @@ const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, segmen
         </select>
       <button 
         className = 'btn-primary' 
-        onClick = { () => segmentQualData(initQualScraper(activeCountry.slice(0, 2))) } 
-        // onClick = { () => segmentQuantData(initQuantScraper(activeCountry.slice(-3))) } >
-        >View data
+        onClick = { () => handlePromises(initQuantScraper(activeCountry.slice(-3))) } >
+        View quantitative data
+        </button>
+        <button 
+        className = 'btn-primary' 
+        onClick = { () => segmentQualData(initQualScraper(activeCountry.slice(0, 2))) } >
+        View qualitative data
         </button>
     </div>
   );
