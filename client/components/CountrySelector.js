@@ -1,6 +1,6 @@
 const React = require('react');
 
-const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, handlePromises, initQualScraper, initQuantScraper }) => {
+const CountrySelector = ({ toggleCountry, activeCountry, fetchQualData, fetchQuantData }) => {
   return (
     <div>
       <select className = "CountrySelector" onChange = { toggleCountry } value={ activeCountry }>
@@ -202,12 +202,12 @@ const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, handle
         </select>
       <button 
         className = 'btn-primary' 
-        onClick = { () => handlePromises(initQuantScraper(activeCountry.slice(-3))) } >
+        onClick = { () => fetchQuantData(activeCountry.slice(-3)) } >
         View quantitative data
         </button>
         <button 
         className = 'btn-primary' 
-        onClick = { () => segmentQualData(initQualScraper(activeCountry.slice(0, 2))) } >
+        onClick = { () => fetchQualData(activeCountry.slice(0, 2)) } >
         View qualitative data
         </button>
     </div>
@@ -217,10 +217,8 @@ const CountrySelector = ({ toggleCountry, activeCountry, segmentQualData, handle
 CountrySelector.propTypes = {
   toggleCountry: React.PropTypes.func.isRequired,
   activeCountry: React.PropTypes.string.isRequired,
-  segmentQualData: React.PropTypes.func.isRequired,
-  // segmentQuantData: React.PropTypes.func.isRequired,
-  initQualScraper: React.PropTypes.func.isRequired,
-  // initQuantScraper: React.PropTypes.func.isRequired
+  fetchQualData: React.PropTypes.func.isRequired,
+  fetchQuantData: React.PropTypes.func.isRequired,
 }
 
 module.exports = CountrySelector;

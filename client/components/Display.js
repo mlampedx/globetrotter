@@ -8,8 +8,8 @@ const QuantDataRow = require('./QuantDataRow');
 import { Link } from 'react-router';
 import Login from './Login';
 import Profile from './Profile';
-const { initQualScraper } = require('./../../server/factbook-scrape-controller');
-const { initQuantScraper,  polIndicators, socIndicators, econIndicators, geoIndicators  } = require('./../../server/worldbank-scrape-controller');
+const { initQualScraper } = require('./../utils/factbook-scrape-controller');
+const { initQuantScraper,  polIndicators, socIndicators, econIndicators, geoIndicators } = require('./../utils/worldbank-scrape-controller');
 
 class Display extends React.Component {
   constructor(props) {
@@ -17,14 +17,25 @@ class Display extends React.Component {
     this.state = {
       activeCountry: 'us-usa',
       activeCategory: 'all',
-      qualCountryData: {},
-      quantCountryData: {},
+      qualDataCache: {},
+      quantDataCache: {},
+      activeQuantRows: {},
+      activeQualRows: {},
+      id: document.cookie.replace(/(?:(?:^|.*;\s*)id\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
     }
     this.toggleCategory = this.toggleCategory.bind(this);
     this.toggleCountry = this.toggleCountry.bind(this);
-    this.segmentQualData = this.segmentQualData.bind(this);
-    this.segmentQuantData = this.segmentQuantData.bind(this);
+    this.cacheQualData = this.cacheQualData.bind(this);
+    this.cacheQuantData = this.cacheQuantData.bind(this);
     this.handlePromises = this.handlePromises.bind(this);
+    this.segmentQuantData = this.segmentQuantData.bind(this);
+    this.segmentQualData = this.segmentQualData.bind(this);
+    this.createQualRows = this.createQualRows.bind(this);
+    this.createQuantRows = this.createQuantRows.bind(this);
+    this.renderQualData = this.renderQualData.bind(this);
+    this.renderQuantData = this.renderQuantData.bind(this);
+    this.fetchQualData = this.fetchQualData.bind(this);
+    this.fetchQuantData = this.fetchQuantData.bind(this);
   } 
 
 toggleCategory(category) {
@@ -35,29 +46,6 @@ toggleCategory(category) {
 toggleCountry(e) {
   this.setState({activeCountry: e.target.value});
   console.log(this.state.activeCountry);
-}
-
-segmentQualData(data) {
-  let qualPolDataRows = [];
-  let qualEconDataRows = [];
-  let qualSocDataRows = [];
-  let qualGeoDataRows = [];
-  let newState = {};
-
-  data.pol.forEach((statistic, i) => qualPolDataRows.push(<QualDataRow data = {statistic} key={i} />));
-  data.econ.forEach((statistic, i) => qualEconDataRows.push(<QualDataRow data = {statistic} key={i} />));
-  data.soc.forEach((statistic, i) => qualSocDataRows.push(<QualDataRow data = {statistic} key={i} />));
-  data.geo.forEach((statistic, i) => qualGeoDataRows.push(<QualDataRow data = {statistic} key={i} />));
-
-
-  Object.assign(newState, this.state);
-    newState.activeCategory = 'all';
-    newState.qualCountryData.pol = qualPolDataRows;
-    newState.qualCountryData.econ = qualEconDataRows;
-    newState.qualCountryData.soc = qualSocDataRows;
-    newState.qualCountryData.geo = qualGeoDataRows;
-      this.setState({newState});
-      console.log(this.state.qualCountryData)
 }
 
 handlePromises(promiseArr) {
@@ -92,83 +80,112 @@ segmentQuantData(jsonArr) {
         quantData.geo ? quantData.geo.push(dataItem) : quantData.geo = [dataItem];
       }
     }
-  })
-
-  let quantPolDataRows = [];
-  let quantEconDataRows = [];
-  let quantSocDataRows = [];
-  let quantGeoDataRows = [];
-  let newState = {};
-
-  quantData.pol.forEach((statistic, i) => quantPolDataRows.push(<QuantDataRow data = {statistic} key={i} />));
-  quantData.econ.forEach((statistic, i) => quantEconDataRows.push(<QuantDataRow data = {statistic} key={i} />));
-  quantData.soc.forEach((statistic, i) => quantSocDataRows.push(<QuantDataRow data = {statistic} key={i} />));
-  quantData.geo.forEach((statistic, i) => quantGeoDataRows.push(<QuantDataRow data = {statistic} key={i} />));
-
-  Object.assign(newState, this.state);
-    newState.activeCategory = 'all';
-    newState.quantCountryData.pol = quantPolDataRows;
-    newState.quantCountryData.econ = quantEconDataRows;
-    newState.quantCountryData.soc = quantSocDataRows;
-    newState.quantCountryData.geo = quantGeoDataRows;
-      this.setState({newState});
-      console.log('quant data successfully parsed!', this.state)
-  
+  });
+  this.cacheQuantData(quantData);
+  this.renderQuantData(this.state.activeCountry.slice(-3));
 }
 
-  render() {
-    const styles = {
-      container: {
-        background: '#D9B310',
-        border: '2px solid black',
-        fontFamily: 'Arial',
-        // width: '100%',
-        // display: 'flex',
-        flexDirection: 'column',
-        padding: '10px',
-      },
-      login: {
-        display: 'inline-block',
-        float: 'left'
-      },
-      profile: {
-        display: 'inline-block',
-        float: 'right'
-      },
-      img: {
-        display: 'block',
-        margin: 'auto'
-      }
-    }
+  segmentQualData(qualData) {
+    this.cacheQualData(qualData);
+    this.renderQualData(this.state.activeCountry.slice(0, 2), qualData);
+  }
 
+  fetchQualData(countryCode) {
+    this.state.qualDataCache[countryCode] ? this.renderQualData(countryCode) : this.segmentQualData(initQualScraper(countryCode));
+  }
+
+  fetchQuantData(countryCode) {
+    this.state.quantDataCache[countryCode] ? this.renderQuantData(countryCode) : this.handlePromises(initQuantScraper(countryCode));
+  }
+
+  cacheQualData(qualDataToCache) {
+    let countryCode = this.state.activeCountry.slice(0, 2);
+    let updatedQualCache = Object.assign({}, this.state.qualDataCache, { [countryCode]: qualDataToCache });
+    this.setState({
+      qualDataCache: updatedQualCache
+    });
+  }
+
+  cacheQuantData(quantDataToCache) {
+    let countryCode = this.state.activeCountry.slice(-3);
+    let updatedQuantCache = Object.assign({}, this.state.quantDataCache, { [countryCode]: quantDataToCache });
+    this.setState({
+      quantDataCache: updatedQuantCache
+    });
+  }
+
+  renderQualData(countryCode, qualData) {
+    let qualDataToRender = this.state.qualDataCache[countryCode] || qualData;
+    let qualRowsToRender = this.createQualRows(qualDataToRender);
+    let newState = Object.assign({}, this.state, { activeQualRows: qualRowsToRender });
+    this.setState(newState);
+  }
+
+  renderQuantData(countryCode) {
+    let quantDataToRender = this.state.quantDataCache[countryCode];
+    let quantRowsToRender = this.createQuantRows(quantDataToRender);
+    let newState = Object.assign({}, this.state, { activeQuantRows: quantRowsToRender });
+    this.setState(newState);
+  }
+
+  createQuantRows(quantData) {
+    const quantDataRows = {};
+    quantDataRows.pol = [];
+    quantDataRows.econ = [];
+    quantDataRows.soc = [];
+    quantDataRows.geo = [];
+
+    quantData.pol.map((statistic, i) => quantDataRows.pol.push(<QuantDataRow data = {statistic} key={`quant-pol${i}`} />));
+    quantData.econ.map((statistic, i) => quantDataRows.econ.push(<QuantDataRow data = {statistic} key={`quant-econ${i}`} />));
+    quantData.soc.map((statistic, i) => quantDataRows.soc.push(<QuantDataRow data = {statistic} key={`quant-soc${i}`} />));
+    quantData.geo.map((statistic, i) => quantDataRows.geo.push(<QuantDataRow data = {statistic} key={`quant-geo${i}`} />));
+
+    return quantDataRows;
+  }
+
+  createQualRows(qualData) {
+    const qualDataRows = {};
+    qualDataRows.pol = [];
+    qualDataRows.econ = [];
+    qualDataRows.soc = [];
+    qualDataRows.geo = [];
+
+    qualData.pol.map((statistic, i) => qualDataRows.pol.push(<QualDataRow data = {statistic} key={`qual-pol${i}`} />));
+    qualData.econ.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} key={`qual-econ${i}`} />));
+    qualData.soc.map((statistic, i) => qualDataRows.soc.push(<QualDataRow data = {statistic} key={`qual-soc${i}`} />));
+    qualData.geo.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} key={`qual-geo${i}`} />));
+
+    return qualDataRows;
+  }
+  
+
+  render() {
     return (
-      <div className='Display' styles = { styles.container }>
-        <img styles = { styles.img } src='globe.png' />
+      <div className='display'>
+        <img className='globe' src='globe.png' />
         <CountrySelector
-          activeCountry={this.state.activeCountry} 
-          toggleCountry={this.toggleCountry} 
-          segmentQualData={this.segmentQualData} 
-          handlePromises={this.handlePromises}
-          initQualScraper={initQualScraper}
-          initQuantScraper={initQuantScraper}
+          activeCountry = {this.state.activeCountry} 
+          toggleCountry = {this.toggleCountry}
+          fetchQualData = {this.fetchQualData}
+          fetchQuantData = {this.fetchQuantData}
         />
         <DisplayHeaders 
           toggleCategory = {this.toggleCategory} 
           activeCategory = {this.state.activeCategory}
         />
         <DataColumn 
-          qualPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.qualCountryData.pol : []}
-          qualEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.qualCountryData.econ : []}
-          qualSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.qualCountryData.soc : []}
-          qualGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.qualCountryData.geo : []} 
-          quantPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.quantCountryData.pol : []}
-          quantEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.quantCountryData.econ : []}
-          quantSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.quantCountryData.soc : []}
-          quantGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.quantCountryData.geo : []}      
+          qualPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.activeQualRows.pol : []}
+          qualEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.activeQualRows.econ : []}
+          qualSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.activeQualRows.soc : []}
+          qualGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.activeQualRows.geo : []} 
+          quantPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.activeQuantRows.pol : []}
+          quantEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.activeQuantRows.econ : []}
+          quantSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.activeQuantRows.soc : []}
+          quantGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.activeQuantRows.geo : []}      
         />
       </div>
         );
     };  
-}
 
+}
 module.exports = Display;

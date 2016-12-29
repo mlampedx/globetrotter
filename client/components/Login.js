@@ -1,20 +1,16 @@
 import React, {PropTypes} from 'react';
 
 const Login = ({}) => {
-  const styles = {
-    btn: {
-      color: 'white',
-      display: 'block',
-      margin: 'auto',
-      padding: '10px'
-    }
-  }
-
   return (
     <div>
-        <button className='btn-warning btn-lg' style = { styles.btn }>
-          <a href="/auth/google">Login with Google</a>
-        </button>
+      <h1>Login for Globetrotter</h1>
+      <form method='POST' action='/login'>
+        <ul>
+          <li><input name="username" type="text" placeholder="username"></input></li>
+          <li><input name="password" type="password" placeholder="password"></input></li>
+          <li><input type='submit' value='Login'></input></li>
+        </ul>
+      </form>
     </div>
   );
 };

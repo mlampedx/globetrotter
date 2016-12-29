@@ -1,0 +1,104 @@
+$primFont: Arial;
+$primBg: darkblue;
+
+li {
+  list-style-type: none;
+}
+
+.display {
+  background: $primBg;
+  border: 2px solid black;
+  font-family: $primFont;
+  padding: 10px;
+}   
+
+.globe {
+  display: block;
+  margin: 0 auto;
+}
+
+.nav {
+  display: inline;
+}
+   
+.login-btn {
+  color: white;
+  display: inline-block;
+  float: left;
+}
+
+.profile-btn {
+  color: white;
+  display: inline-block;
+  float: right;
+}
+ 
+.outer-div {
+  display: grid;
+}
+
+.data-column {
+  width: 100%
+}
+
+.pol-btn {
+  background-color: blue;
+  display: inline;
+  font-family: $primFont;
+  font-size: 20px;
+  height: 50px;
+  margin: 50px 120px 50px 120px;
+  width: 200px;
+  text-align: center;
+}
+
+.login-btn-big {
+  color: white;
+  display: block;
+  margin: auto;
+  padding: 10px;
+}
+
+.econ-btn {
+  background-color: green;
+  display: inline;
+  font-family: $primFont;
+  font-size: 20px;
+  height: 50px;
+  margin: 50px 120px 50px 120px;
+  width: 200px;
+  text-align: center;
+}
+
+.soc-btn {
+  background-color: red;
+  display: inline;
+  font-family: $primFont;
+  font-size: 20px;
+  height: 50px;
+  margin: 50px 120px 50px 120px;
+  width: 200px;
+  text-align: center;
+}
+
+.geo-btn {
+  background-color: purple;
+  display: inline;
+  font-family: $primFont;
+  font-size: 20px;
+  height: 50px;
+  margin: 50px 120px 50px 120px;
+  width: 200px;
+  text-align: center;
+}
+    
+.data-label {
+  color: white;
+  font-family: $primFont;
+  text-align: center;
+}
+
+.data-row {
+  color: white;
+  font-family: $primFont;
+}

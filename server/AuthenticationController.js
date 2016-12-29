@@ -1,13 +1,12 @@
-const AuthenticationController = {};
+const User = require('./../models/User');
 
-AuthenticationController.isAuthenticated = (req, res, next) => {
-  if (req.user) {
-    res.cookie('google_id', req.user.google_id);
-    res.cookie('username', req.user.username);
-    console.log(res.cookie)
+function authenticateUser(req, res, next) {
+  if (req.user.id) {
+    req.cookie('id', req.user.id);
     return next();
   }
-  res.redirect('/login');
+  req.flash('error', 'You must be logged in to access this page.');
+  res.redirect('/');
 }
 
-module.exports = AuthenticationController;
+module.exports = { authenticateUser };

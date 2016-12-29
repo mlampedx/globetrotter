@@ -4,16 +4,11 @@ import Login from './Login';
 import Profile from './Profile';
 
 const Nav = props => {
-  const styles = {
-    nav: {
-      display: 'inline'
-    }
-  }
-
   return (
-    <div styles = { styles.nav }>
-      <button className='btn-info' styles = { styles.login }><Link to='/login'>Login</Link></button>
-      <button className='btn-info' styles = { styles.profile }><Link to='/profile'>Profile</Link></button>
+    <div className = 'nav'>
+      <button className='btn-info login-btn'><Link to='/login'>Login</Link></button>
+      <button className='btn-info login-btn'><Link to='/register'>Register</Link></button>
+      <button className='btn-info profile-btn'><Link to='/profile'>Profile</Link></button>
     </div>
   );
 };
