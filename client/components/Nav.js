@@ -6,7 +6,7 @@ import Profile from './Profile';
 const Nav = props => {
   return (
     <div className = 'nav'>
-      <button className='btn-info login-btn'><Link to='/login'>Login</Link></button>
+      <button className='btn-info login-btn'><Link to='/'>Login</Link></button>
       <button className='btn-info login-btn'><Link to='/register'>Register</Link></button>
       <button className='btn-info profile-btn'><Link to='/profile'>Profile</Link></button>
     </div>

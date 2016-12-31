@@ -1,20 +1,21 @@
 import React from 'react';
-import { render } from 'react-dom';
-const ReactDOM = require('react-dom');
-const Display = require('./components/Display');
-import { Router, Route, hashHistory, IndexRoute } from 'react-router';
-import Login from './components/Login';
-import Profile from './components/Profile';
-import Register from './components/Register';
-import Container from './components/Container';
+import { ReactDOM, render } from 'react-dom';
+import { Router, Route, browserHistory, IndexRoute } from 'react-router';
+import { 
+  Container,
+  CountrySelector,
+  DataColumn, 
+  Display, 
+  DisplayHeaders,
+  Login, 
+  Nav, 
+  Profile, 
+  QualDataRow, 
+  QuantDataRow, 
+  Register, 
+  Welcome 
+} from './components';
 require('./styles.scss');
-
-function requireAuth(nextState, replace, callback) {
-  if (document.cookie) {
-    console.log('Cookie found:', document.cookie);
-    replace('/profile');
-  }
-}
 
 class App extends React.Component {
   constructor(props) {
@@ -22,16 +23,22 @@ class App extends React.Component {
   };
   render() {
     return (
-      <Router history={hashHistory}>
-          <Route path='/' component={Container}>
-            <IndexRoute component={Display} />
-            <Route path='/login' component={Login} />
-            <Route path='/profile' component={Profile} onEnter={requireAuth}/>
+      <Router history={browserHistory}>
+          <Route component={Container}>
+
+          <Route path='/' component={Welcome}>
+            <IndexRoute component={Login} />
             <Route path='/register' component={Register} />
-        </Route>
+          </Route>
+
+          <Route path='/dashboard' component={Display}>
+            <Route path='/profile' component={Profile} />
+          </Route>
+          
+          </Route>
       </Router>
     )
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+render(<App />, document.getElementById('root'));

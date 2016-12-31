@@ -1,47 +1,45 @@
 const express = require('express');
-const passport = require('passport');
 const path = require('path');
 const fs = require('fs');
 const session = require('express-session');
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
-const { authenticateUser } = require('./AuthenticationController');
-const { loginUser, registerUser } = require('./UserController')
+const { isAuthenticated, verifySession, registerUser, retrieveUser } = require('./Controllers');
+const { SESSION_SECRET } = require('./../app.config');
 
 const app = express();
 
 app.use(session({
-	path: '*',
-	secret: 'Globetrotter',
-	httpOnly: true,
-	secure: false,
-	maxAge: null
+	cookieName: 'session',
+	secret: SESSION_SECRET,
+	duration: 30 * 60 * 1000,
+	activeDuration: 5 * 60 * 1000,
+  resave: true,
+  saveUninitialized: true
 }));
 app.use(cookieParser());
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './../client')));
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, './../build/index.html'));
 });
-
 app.get('/build/webpack-bundle.js', (req, res, next) => {
 	return res.status(200).sendFile(path.join(__dirname, './../build/webpack-bundle.js'));
 });
-
-app.get('/profile', authenticateUser);
+app.get('/profile', isAuthenticated);
 app.get('/logout', (req, res) => {
 	req.logout();
 	res.redirect('/');
 });
+app.get('*', (req, res) => {
+  return res.status(200).sendFile(path.join(__dirname, './../build/index.html'));
+});
 
-app.post('/register', registerUser);
-app.post('/login', passport.authenticate('local', {
-	successRedirect: '/profile',
-	failureRedirect: '/',
-	failureFlash: true,
-}));
+
+app.post('/register', registerUser, isAuthenticated);
+app.post('/login', retrieveUser, verifySession);
 
 app.listen(3000, () => console.log('listening on port 3000'));
 

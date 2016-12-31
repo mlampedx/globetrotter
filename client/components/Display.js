@@ -21,7 +21,7 @@ class Display extends React.Component {
       quantDataCache: {},
       activeQuantRows: {},
       activeQualRows: {},
-      id: document.cookie.replace(/(?:(?:^|.*;\s*)id\s*\=\s*([^;]*).*$)|^.*$/, "$1"),
+      username: document.cookie.split("=").pop(),
     }
     this.toggleCategory = this.toggleCategory.bind(this);
     this.toggleCountry = this.toggleCountry.bind(this);
@@ -36,6 +36,7 @@ class Display extends React.Component {
     this.renderQuantData = this.renderQuantData.bind(this);
     this.fetchQualData = this.fetchQualData.bind(this);
     this.fetchQuantData = this.fetchQuantData.bind(this);
+    this.removeCookies = this.removeCookies.bind(this);
   } 
 
 toggleCategory(category) {
@@ -158,11 +159,13 @@ segmentQuantData(jsonArr) {
     return qualDataRows;
   }
   
+  removeCookies() {
+    document.cookie = 'username' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  }
 
   render() {
     return (
       <div className='display'>
-        <img className='globe' src='globe.png' />
         <CountrySelector
           activeCountry = {this.state.activeCountry} 
           toggleCountry = {this.toggleCountry}

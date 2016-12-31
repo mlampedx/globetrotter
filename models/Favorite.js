@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 const attributes = {
-  favid: {
+  userid: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
@@ -11,7 +11,7 @@ const attributes = {
     allowNull: false,
   },
   value: {
-    type: Sequelize.VARCHAR,
+    type: Sequelize.STRING,
     allowNull: false,
   },
   year: { 
