@@ -70,16 +70,16 @@ segmentQuantData(jsonArr) {
         year: json[1][0].date,
         country: json[1][0].country.value 
       };
-      if (polIndicators.includes(dataItem.indicator)) {
+      if (polIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
         quantData.pol ? quantData.pol.push(dataItem) : quantData.pol = [dataItem];
       }
-      else if (econIndicators.includes(dataItem.indicator)) {
+      else if (econIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
         quantData.econ ? quantData.econ.push(dataItem) : quantData.econ = [dataItem];
       }
-      else if (socIndicators.includes(dataItem.indicator)) {
+      else if (socIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
         quantData.soc ? quantData.soc.push(dataItem) : quantData.soc = [dataItem];
       }
-      else if (geoIndicators.includes(dataItem.indicator)) {
+      else if (geoIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
         quantData.geo ? quantData.geo.push(dataItem) : quantData.geo = [dataItem];
       }
     }
