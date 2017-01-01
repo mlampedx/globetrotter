@@ -7,6 +7,7 @@ import {
   DataColumn, 
   Display, 
   DisplayHeaders,
+  FavoriteDataRow,
   Login, 
   Nav, 
   Profile, 
@@ -31,9 +32,8 @@ class App extends React.Component {
             <Route path='/register' component={Register} />
           </Route>
 
-          <Route path='/dashboard' component={Display}>
-            <Route path='/profile' component={Profile} />
-          </Route>
+          <Route path='/dashboard' component={Display} />
+          <Route path='/profile' component={Profile} />
           
           </Route>
       </Router>

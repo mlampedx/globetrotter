@@ -3,6 +3,7 @@ export { default as CountrySelector } from './CountrySelector';
 export { default as DataColumn } from './DataColumn';
 export { default as Display } from './Display';
 export { default as DisplayHeaders } from './DisplayHeaders';
+export { default as FavoriteDataRow } from './FavoriteDataRow';
 export { default as Login } from './Login';
 export { default as Nav }from './Nav';
 export { default as Profile } from './Profile';

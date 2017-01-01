@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
 
 const attributes = {
-  userid: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+  username: {
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   name: {
     type: Sequelize.STRING,
@@ -17,6 +16,10 @@ const attributes = {
   year: { 
     type: Sequelize.STRING,
     allowNull: true,
+  },
+  country: {
+    type: Sequelize.STRING,
+    allowNull: false,
   },
   createdAt: {
     type: Sequelize.DATE,

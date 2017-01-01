@@ -1,15 +1,16 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const DisplayHeaders = require('./DisplayHeaders');
-const CountrySelector = require('./CountrySelector');
-const DataColumn = require('./DataColumn');
-const QualDataRow = require('./QualDataRow');
-const QuantDataRow = require('./QuantDataRow');
-import { Link } from 'react-router';
-import Login from './Login';
-import Profile from './Profile';
 const { initQualScraper } = require('./../utils/factbook-scrape-controller');
 const { initQuantScraper,  polIndicators, socIndicators, econIndicators, geoIndicators } = require('./../utils/worldbank-scrape-controller');
+import $ from 'jquery';
+import { Link, browserHistory } from 'react-router';
+import {
+  DisplayHeaders,
+  CountrySelector,
+  DataColumn,
+  QualDataRow,
+  QuantDataRow,
+} from './index';
 
 class Display extends React.Component {
   constructor(props) {
@@ -37,6 +38,7 @@ class Display extends React.Component {
     this.fetchQualData = this.fetchQualData.bind(this);
     this.fetchQuantData = this.fetchQuantData.bind(this);
     this.removeCookies = this.removeCookies.bind(this);
+    this.saveFavoriteIndicator = this.saveFavoriteIndicator.bind(this);
   } 
 
 toggleCategory(category) {
@@ -100,11 +102,14 @@ segmentQuantData(jsonArr) {
   }
 
   cacheQualData(qualDataToCache) {
+    console.log('qual data to cache...', qualDataToCache)
     let countryCode = this.state.activeCountry.slice(0, 2);
     let updatedQualCache = Object.assign({}, this.state.qualDataCache, { [countryCode]: qualDataToCache });
+    console.log('updatedQualCache', updatedQualCache)
     this.setState({
       qualDataCache: updatedQualCache
     });
+    console.log('qual data cached...', this.state)
   }
 
   cacheQuantData(quantDataToCache) {
@@ -136,10 +141,10 @@ segmentQuantData(jsonArr) {
     quantDataRows.soc = [];
     quantDataRows.geo = [];
 
-    quantData.pol.map((statistic, i) => quantDataRows.pol.push(<QuantDataRow data = {statistic} key={`quant-pol${i}`} />));
-    quantData.econ.map((statistic, i) => quantDataRows.econ.push(<QuantDataRow data = {statistic} key={`quant-econ${i}`} />));
-    quantData.soc.map((statistic, i) => quantDataRows.soc.push(<QuantDataRow data = {statistic} key={`quant-soc${i}`} />));
-    quantData.geo.map((statistic, i) => quantDataRows.geo.push(<QuantDataRow data = {statistic} key={`quant-geo${i}`} />));
+    quantData.pol.map((statistic, i) => quantDataRows.pol.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-pol${i}`} category={'pol'} index={i} />));
+    quantData.econ.map((statistic, i) => quantDataRows.econ.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-econ${i}`} category={'econ'}  index={i} />));
+    quantData.soc.map((statistic, i) => quantDataRows.soc.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-soc${i}`} category={'soc'} index={i} />));
+    quantData.geo.map((statistic, i) => quantDataRows.geo.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-geo${i}`} category={'geo'} index={i} />));
 
     return quantDataRows;
   }
@@ -151,14 +156,33 @@ segmentQuantData(jsonArr) {
     qualDataRows.soc = [];
     qualDataRows.geo = [];
 
-    qualData.pol.map((statistic, i) => qualDataRows.pol.push(<QualDataRow data = {statistic} key={`qual-pol${i}`} />));
-    qualData.econ.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} key={`qual-econ${i}`} />));
-    qualData.soc.map((statistic, i) => qualDataRows.soc.push(<QualDataRow data = {statistic} key={`qual-soc${i}`} />));
-    qualData.geo.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} key={`qual-geo${i}`} />));
+    qualData.pol.map((statistic, i) => qualDataRows.pol.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-pol${i}`} category={'pol'} index={i} />));
+    qualData.econ.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-econ${i}`} category={'econ'}  index={i} />));
+    qualData.soc.map((statistic, i) => qualDataRows.soc.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-soc${i}`} category={'soc'} index={i} />));
+    qualData.geo.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-geo${i}`} category={'geo'} index={i} />));
 
     return qualDataRows;
   }
   
+  saveFavoriteIndicator(i, type, category) {
+    let indicatorIndex = i;
+    let indicatorToSave;
+    console.log('qualDataCache:', this.state.qualDataCache)
+
+    type === 'qual' ? 
+      indicatorToSave = this.state.qualDataCache[this.state.activeCountry.slice(0, 2)][category][indicatorIndex] :
+      indicatorToSave = this.state.quantDataCache[this.state.activeCountry.slice(-3)][category][indicatorIndex];
+    
+    console.log('indicatorToSave', indicatorToSave)
+    console.log('Adding favorite object', { username: this.state.username, name: indicatorToSave.name, value: indicatorToSave.value, country: this.state.activeCountry, year: indicatorToSave.year })
+    $.post('/add-favorite', { username: this.state.username, name: indicatorToSave.name, value: indicatorToSave.value, country: this.state.activeCountry, year: indicatorToSave.year })
+      .done(data => browserHistory.push('/dashboard'))
+      .fail(err => { 
+        console.error(err) 
+        browserHistory.push('/dashboard')
+      });
+  }
+
   removeCookies() {
     document.cookie = 'username' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   }
