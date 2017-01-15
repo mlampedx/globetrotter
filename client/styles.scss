@@ -5,6 +5,47 @@ li {
   list-style-type: none;
 }
 
+ul {
+  padding: 0;
+}
+
+.login-div {
+  background: url(https://static.pexels.com/photos/2422/sky-earth-galaxy-universe.jpg) no-repeat center fixed; 
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.login-form {
+  align-items: center;
+  background-color: ghostwhite;
+  display: inline-block;
+  margin: auto;
+  opacity: 0.95;
+  padding: 25px;
+  justify-content: center;
+}
+
+.login-title {
+  font-family: 'Helvetica Neue', 'Arial';
+  font-size: 32px;
+  text-align: center;
+}
+
+.login-field {
+  margin: 0.3em;
+}
+
+.login-btn {
+  display: inline-block;
+  margin: 0.5em;
+}
+
+.register-btn {
+  display: inline-block;
+  margin: 0.5em;
+}
+
 .display {
   background: $primBg;
   border: 2px solid black;
@@ -12,25 +53,13 @@ li {
   padding: 10px;
 }   
 
-.globe {
-  display: block;
-  margin: 0 auto;
-}
-
 .nav {
-  display: inline;
-}
-   
-.login-btn {
-  color: white;
-  display: inline-block;
-  float: left;
+  display: flex;
 }
 
-.profile-btn {
+.nav-links a {
   color: white;
-  display: inline-block;
-  float: right;
+  text-decoration: none;
 }
  
 .outer-div {
