@@ -39,9 +39,6 @@ class Welcome extends Component {
 
     return (
       <div className="welcome">
-        <h1>Globetrotter</h1>
-        <img className='globe' src='globe.png' />
-        <h4>global intelligence dashboard.</h4>
         {children}
       </div>
     );
