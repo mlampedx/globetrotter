@@ -2,14 +2,29 @@ import React, {PropTypes} from 'react';
 import { Link } from 'react-router';
 import Login from './Login';
 import Profile from './Profile';
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton'
 
 const Nav = props => {
   return (
-    <div className = 'nav'>
-      <button className='btn-info login-btn'><Link to='/'>Login</Link></button>
-      <button className='btn-info login-btn'><Link to='/register'>Register</Link></button>
-      <button className='btn-info profile-btn'><Link to='/profile'>Profile</Link></button>
-    </div>
+    <AppBar 
+      className = 'nav'
+      title = 'Globetrotter'
+      titleStyle = { {fontFamily: 'Syncopate'} }
+    >
+      <FlatButton 
+        className = 'nav-links'
+        label = { <Link to='/'>Dashboard</Link> }
+      />
+      <FlatButton 
+        className = 'nav-links'
+        label = { <Link to='/favorites'>Favorites</Link> }
+      />
+      <FlatButton 
+        className = 'nav-links'
+        label = { <Link to='/register'>Register</Link> }
+      />
+    </AppBar>
   );
 };
 
