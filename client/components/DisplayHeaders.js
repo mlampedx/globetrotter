@@ -27,35 +27,6 @@ const DisplayHeaders = ({toggleCategory, activeCategory}) => {
       />
       
     </Tabs>
-
-    // <div>
-    //   <span>
-    //     <FlatButton 
-    //       className='pol-btn'
-    //       onClick = {() => toggleCategory('Politics')}
-    //       label = 'Politics'
-    //     />
-    //     <FlatButton 
-    //       className='econ-btn' 
-    //       onClick = {() => toggleCategory('Economics')}
-    //       label = 'Economics'
-    //     />
-    //     <FlatButton 
-    //       className='soc-btn' 
-    //       onClick = {() => toggleCategory('Society')}
-    //       label = 'Society'
-    //     />
-    //     <FlatButton 
-    //       className='geo-btn'
-    //       onClick = {() => toggleCategory('Geopolitics')}
-    //       label = 'Geopolitics'
-    //     />
-    //   </span>
-    // <div>
-    //   <div className='data-label'>Qualitative Data</div>
-    // </div>
-    // <hr />
-    // </div>
   )
 }
 
