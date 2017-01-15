@@ -5,7 +5,7 @@ export { default as Display } from './Display';
 export { default as DisplayHeaders } from './DisplayHeaders';
 export { default as FavoriteDataRow } from './FavoriteDataRow';
 export { default as Login } from './Login';
-export { default as Nav }from './Nav';
+export { default as Nav } from './Nav';
 export { default as Profile } from './Profile';
 export { default as QualDataRow } from './QualDataRow';
 export { default as QuantDataRow } from './QuantDataRow';
