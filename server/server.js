@@ -39,7 +39,7 @@ app.get('*', (req, res) => {
 
 app.post('/register', registerUser, isAuthenticated);
 app.post('/login', retrieveUser, verifySession);
-app.post('/profile', retrieveFavorites); 
+app.post('/favorites', retrieveFavorites); 
 app.post('/add-favorite', addFavorite);
 app.post('/delete-favorite', deleteFavorite);
 
