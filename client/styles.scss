@@ -1,5 +1,5 @@
-$primFont: Arial;
-$primBg: darkblue;
+$primFont: Helvetica;
+$primBg: navy;
 
 li {
   list-style-type: none;
@@ -27,7 +27,7 @@ ul {
 }
 
 .login-title {
-  font-family: 'Helvetica Neue', 'Arial';
+  font-family: 'Helvetica Neue', $primFont;
   font-size: 32px;
   text-align: center;
 }
@@ -51,9 +51,10 @@ ul {
   border: 2px solid black;
   font-family: $primFont;
   padding: 10px;
-}   
+}
 
 .nav {
+  align-items: center;
   display: flex;
 }
 
@@ -71,12 +72,11 @@ ul {
 }
 
 .pol-btn {
-  background-color: blue;
+  color: blue;
   display: inline;
   font-family: $primFont;
   font-size: 20px;
   height: 50px;
-  margin: 50px 120px 50px 120px;
   width: 200px;
   text-align: center;
 }
@@ -119,6 +119,10 @@ ul {
   margin: 50px 120px 50px 120px;
   width: 200px;
   text-align: center;
+}
+
+.country-selector-btn {
+  margin: 0.2em;
 }
     
 .data-label {
