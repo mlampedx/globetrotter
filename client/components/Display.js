@@ -1,15 +1,21 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { initQualScraper } = require('./../utils/factbook-scrape-controller');
-const { initQuantScraper,  polIndicators, socIndicators, econIndicators, geoIndicators } = require('./../utils/worldbank-scrape-controller');
+import React from 'react';
+import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import { Link, browserHistory } from 'react-router';
+import FlatButton from 'material-ui/FlatButton';
+// import Paper from 'material-ui/Paper';
+import { TableRow, TableRowColumn} from 'material-ui/Table';
+import { initQualScraper } from './../utils/factbook-scrape-controller';
+import { 
+  initQuantScraper, 
+  polIndicators, 
+  socIndicators, 
+  econIndicators, 
+  geoIndicators } from './../utils/worldbank-scrape-controller';
 import {
   DisplayHeaders,
   CountrySelector,
-  DataColumn,
-  QualDataRow,
-  QuantDataRow,
+  DataDashboard
 } from './index';
 
 class Display extends React.Component {
@@ -17,7 +23,7 @@ class Display extends React.Component {
     super(props);
     this.state = {
       activeCountry: 'us-usa',
-      activeCategory: 'all',
+      activeCategory: 'All',
       qualDataCache: {},
       quantDataCache: {},
       activeQuantRows: {},
@@ -31,8 +37,8 @@ class Display extends React.Component {
     this.handlePromises = this.handlePromises.bind(this);
     this.segmentQuantData = this.segmentQuantData.bind(this);
     this.segmentQualData = this.segmentQualData.bind(this);
-    this.createQualRows = this.createQualRows.bind(this);
-    this.createQuantRows = this.createQuantRows.bind(this);
+    this.createDataRows = this.createDataRows.bind(this);
+    this.createDataRow = this.createDataRow.bind(this);
     this.renderQualData = this.renderQualData.bind(this);
     this.renderQuantData = this.renderQuantData.bind(this);
     this.fetchQualData = this.fetchQualData.bind(this);
@@ -68,18 +74,23 @@ segmentQuantData(jsonArr) {
         name: json[1][0].indicator.value,
         value: json[1][0].value,
         year: json[1][0].date,
-        country: json[1][0].country.value 
+        country: json[1][0].country.value,
+        type: 'Quantitative',
       };
       if (polIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
+        dataItem.category = 'Political';
         quantData.pol ? quantData.pol.push(dataItem) : quantData.pol = [dataItem];
       }
       else if (econIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
+        dataItem.category = 'Economic';
         quantData.econ ? quantData.econ.push(dataItem) : quantData.econ = [dataItem];
       }
       else if (socIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
+        dataItem.category = 'Societal';
         quantData.soc ? quantData.soc.push(dataItem) : quantData.soc = [dataItem];
       }
       else if (geoIndicators.includes(dataItem.indicator) && dataItem.value !== null) {
+        dataItem.category = 'Geopolitical';
         quantData.geo ? quantData.geo.push(dataItem) : quantData.geo = [dataItem];
       }
     }
@@ -90,7 +101,6 @@ segmentQuantData(jsonArr) {
 
   segmentQualData(qualData) {
     this.cacheQualData(qualData);
-    this.renderQualData(this.state.activeCountry.slice(0, 2), qualData);
   }
 
   fetchQualData(countryCode) {
@@ -108,7 +118,7 @@ segmentQuantData(jsonArr) {
     console.log('updatedQualCache', updatedQualCache)
     this.setState({
       qualDataCache: updatedQualCache
-    });
+    }, this.renderQualData(this.state.activeCountry.slice(0, 2), qualDataToCache));
     console.log('qual data cached...', this.state)
   }
 
@@ -122,60 +132,69 @@ segmentQuantData(jsonArr) {
 
   renderQualData(countryCode, qualData) {
     let qualDataToRender = this.state.qualDataCache[countryCode] || qualData;
-    let qualRowsToRender = this.createQualRows(qualDataToRender);
+    let qualRowsToRender = this.createDataRows(qualDataToRender);
     let newState = Object.assign({}, this.state, { activeQualRows: qualRowsToRender });
     this.setState(newState);
   }
 
   renderQuantData(countryCode) {
     let quantDataToRender = this.state.quantDataCache[countryCode];
-    let quantRowsToRender = this.createQuantRows(quantDataToRender);
+    let quantRowsToRender = this.createDataRows(quantDataToRender);
     let newState = Object.assign({}, this.state, { activeQuantRows: quantRowsToRender });
     this.setState(newState);
   }
 
-  createQuantRows(quantData) {
-    const quantDataRows = {};
-    quantDataRows.pol = [];
-    quantDataRows.econ = [];
-    quantDataRows.soc = [];
-    quantDataRows.geo = [];
+  createDataRows(data) {
+    const dataRows = {};
+      dataRows.pol = data.pol.map((statistic, i) => { 
+        return this.createDataRow(statistic, i);
+      });  
+      dataRows.econ = data.econ.map((statistic, i) => {
+        return this.createDataRow(statistic, i);
+      });
+      dataRows.soc = data.soc.map((statistic, i) => {
+        return this.createDataRow(statistic, i);
+      });
+      dataRows.geo = data.geo.map((statistic, i) => {
+        return this.createDataRow(statistic, i);
+      });
 
-    quantData.pol.map((statistic, i) => quantDataRows.pol.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-pol${i}`} category={'pol'} index={i} />));
-    quantData.econ.map((statistic, i) => quantDataRows.econ.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-econ${i}`} category={'econ'}  index={i} />));
-    quantData.soc.map((statistic, i) => quantDataRows.soc.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-soc${i}`} category={'soc'} index={i} />));
-    quantData.geo.map((statistic, i) => quantDataRows.geo.push(<QuantDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`quant-geo${i}`} category={'geo'} index={i} />));
-
-    return quantDataRows;
-  }
-
-  createQualRows(qualData) {
-    const qualDataRows = {};
-    qualDataRows.pol = [];
-    qualDataRows.econ = [];
-    qualDataRows.soc = [];
-    qualDataRows.geo = [];
-
-    qualData.pol.map((statistic, i) => qualDataRows.pol.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-pol${i}`} category={'pol'} index={i} />));
-    qualData.econ.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-econ${i}`} category={'econ'}  index={i} />));
-    qualData.soc.map((statistic, i) => qualDataRows.soc.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-soc${i}`} category={'soc'} index={i} />));
-    qualData.geo.map((statistic, i) => qualDataRows.econ.push(<QualDataRow data = {statistic} saveFavoriteIndicator = {this.saveFavoriteIndicator} key={`qual-geo${i}`} category={'geo'} index={i} />));
-
-    return qualDataRows;
+    return dataRows;
   }
   
-  saveFavoriteIndicator(i, type, category) {
-    let indicatorIndex = i;
-    let indicatorToSave;
-    console.log('qualDataCache:', this.state.qualDataCache)
+  createDataRow(statistic, index) {
+    const { type, category, name, value = 'No data available', year = 2016 } = statistic;
 
-    type === 'qual' ? 
-      indicatorToSave = this.state.qualDataCache[this.state.activeCountry.slice(0, 2)][category][indicatorIndex] :
-      indicatorToSave = this.state.quantDataCache[this.state.activeCountry.slice(-3)][category][indicatorIndex];
+    return (
+      <TableRow key = {`${type}-${category.slice(3)}-R${index}`} index = { index }>
+        <TableRowColumn key = { `${this.activeCountry}${this.activeCategory}${index}` }>{ category }</TableRowColumn>
+        <TableRowColumn key = { `${this.activeCountry}${this.activeCategory}${name}` }>{ name }</TableRowColumn>
+        <TableRowColumn key = { `${this.activeCountry}${this.activeCategory}${value.slice(0, 5)}` }>{ value }</TableRowColumn>
+        <TableRowColumn key = { `${this.activeCountry}${this.activeCategory}${year}` }>{ year }</TableRowColumn>
+        <TableRowColumn key = { `${this.activeCountry}${this.activeCategory}${index}fav`}>
+          <FlatButton label = 'Favorite' primary = { true } onClick = {() => this.saveFavoriteIndicator(index, type, category) } />
+        </TableRowColumn>
+      </TableRow>
+    )
+  }
+
+  saveFavoriteIndicator(i, type, category) {
+    const categoryMap = {
+      'Political': 'pol',
+      'Economic': 'econ',
+      'Societal': 'soc',
+      'Geopolitical': 'geo',
+    }
+
+    let indicatorToSave;
+
+    type === 'Qualitative' ? 
+      indicatorToSave = this.state.qualDataCache[this.state.activeCountry.slice(0, 2)][categoryMap[category]][i] :
+      indicatorToSave = this.state.quantDataCache[this.state.activeCountry.slice(-3)][categoryMap[category]][i];
     
     console.log('indicatorToSave', indicatorToSave)
-    console.log('Adding favorite object', { username: this.state.username, name: indicatorToSave.name, value: indicatorToSave.value, country: this.state.activeCountry, year: indicatorToSave.year })
-    $.post('/add-favorite', { username: this.state.username, name: indicatorToSave.name, value: indicatorToSave.value, country: this.state.activeCountry, year: indicatorToSave.year })
+    console.log('Adding favorite object', { username: this.state.username, name: indicatorToSave.name, value: indicatorToSave.value, country: indicatorToSave.country, year: indicatorToSave.year, type: indicatorToSave.type, category: indicatorToSave.category })
+    $.post('/add-favorite', { username: this.state.username, name: indicatorToSave.name, value: indicatorToSave.value, country: indicatorToSave.country, year: indicatorToSave.year, type: indicatorToSave.type, category: indicatorToSave.category })
       .done(data => browserHistory.push('/dashboard'))
       .fail(err => { 
         console.error(err) 
@@ -200,15 +219,15 @@ segmentQuantData(jsonArr) {
           toggleCategory = {this.toggleCategory} 
           activeCategory = {this.state.activeCategory}
         />
-        <DataColumn 
-          qualPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.activeQualRows.pol : []}
-          qualEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.activeQualRows.econ : []}
-          qualSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.activeQualRows.soc : []}
-          qualGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.activeQualRows.geo : []} 
-          quantPolDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Politics' ? this.state.activeQuantRows.pol : []}
-          quantEconDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Economics' ? this.state.activeQuantRows.econ : []}
-          quantSocDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Society' ? this.state.activeQuantRows.soc : []}
-          quantGeoDataRows = {this.state.activeCategory === 'all' || this.state.activeCategory === 'Geopolitics' ? this.state.activeQuantRows.geo : []}      
+        <DataDashboard
+          qualPolDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Political' ? this.state.activeQualRows.pol : []}
+          qualEconDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Economic' ? this.state.activeQualRows.econ : []}
+          qualSocDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Societal' ? this.state.activeQualRows.soc : []}
+          qualGeoDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Geopolitical' ? this.state.activeQualRows.geo : []} 
+          quantPolDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Political' ? this.state.activeQuantRows.pol : []}
+          quantEconDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Economic' ? this.state.activeQuantRows.econ : []}
+          quantSocDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Societal' ? this.state.activeQuantRows.soc : []}
+          quantGeoDataRows = {this.state.activeCategory === 'All' || this.state.activeCategory === 'Geopolitical' ? this.state.activeQuantRows.geo : []}      
         />
       </div>
         );
