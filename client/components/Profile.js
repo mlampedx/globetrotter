@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
-import FavoriteDataRow from './FavoriteDataRow';
+import FavoritesDashboard from './FavoritesDashboard';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
 import $ from 'jquery';
 import { browserHistory } from 'react-router';
 
@@ -7,46 +9,69 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      favoriteDataRows: [],
+      favDataRows: [],
       username: document.cookie.split("=").pop(),
     }
-    this.createFavoriteIndicatorRows = this.createFavoriteIndicatorRows.bind(this);
-    this.deleteFavoriteIndicator = this.deleteFavoriteIndicator.bind(this);
+    this.createFavDataRows = this.createFavDataRows.bind(this);
+    this.createFavDataRow = this.createFavDataRow.bind(this);
+    this.deleteFavDataRow = this.deleteFavDataRow.bind(this);
   }
 
   componentDidMount() {
-    $.post('/profile', { username: this.state.username })
-      .done(data => { this.createFavoriteIndicatorRows(data); })
+    $.post('/favorites', { username: this.state.username })
+      .done(data => { this.createFavDataRows(data); })
       .fail(error => { throw new Error(error); });
   }
 
-  createFavoriteIndicatorRows(data) {
-    const favoriteIndicatorRows = [];
+  createFavDataRows(favData) {
+    console.log('favData', favData);
+    const favDataRows = favData.map((statistic, i) => { 
+      return this.createFavDataRow(statistic, i);
+    });  
 
-    data.forEach((indicator, i) => {
-      favoriteIndicatorRows.push(<FavoriteDataRow data = {indicator} deleteFavoriteIndicator = {this.deleteFavoriteIndicator} key={`fav${i}`} index = {i} />);
+    const newState = Object.assign({}, this.state, {
+      favDataRows: favDataRows
     });
 
-    const newState = Object.assign({}, this.state, { favoriteDataRows: favoriteIndicatorRows });
     this.setState(newState);
+    console.log('newState set:', newState)
+  }
+  
+  createFavDataRow(statistic, index) {
+    const { country, type, category, name, value = 'No data available', year = 2016 } = statistic;
+    console.log('statistic', statistic)
+
+    return (
+      <TableRow key = {`${type}-${category.slice(3)}-R${index}`} index = { index }>
+        <TableRowColumn key = { `fav${country}${category}` }>{ country }</TableRowColumn>
+        <TableRowColumn key = { `fav${country}${category}${index}` }>{ category }</TableRowColumn>
+        <TableRowColumn key = { `fav${country}${category}${name}` }>{ name }</TableRowColumn>
+        <TableRowColumn key = { `fav${country}${category}${value.slice(0, 5)}` }>{ value }</TableRowColumn>
+        <TableRowColumn key = { `fav${country}${category}${year}` }>{ year }</TableRowColumn>
+        <TableRowColumn key = { `fav${country}${category}${index}fav`}>
+          <FlatButton label = 'DELETE' secondary = { true } onClick = {() => this.deleteFavDataRow(index) } />
+        </TableRowColumn>
+      </TableRow>
+    )
   }
 
-  deleteFavoriteIndicator(i) {
-    let indicatorIndex = i;
-    let indicatorToDelete = this.state.favoriteDataRows[i].props.data.name;
+  deleteFavDataRow(i) {
+    let indicatorToDelete = this.state.favDataRows[i].props.children[2]._shadowChildren;
 
     $.post('/delete-favorite', { username: this.state.username, name: indicatorToDelete })
       .done(data => {
-        browserHistory.push('/profile');
+        browserHistory.push('/favorites');
         window.location.reload(true);
       })
-      .fail(err => browserHistory.push('/profile'));
+      .fail(err => browserHistory.push('/favorites'));
   }
   
   render() {
     return (
-      <div className='profile'>
-        {this.state.favoriteDataRows}
+      <div className='favorites'>
+        <FavoritesDashboard 
+          favDataRows = { this.state.favDataRows } 
+        />
       </div>
     )
   }
