@@ -21,6 +21,14 @@ const attributes = {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  type: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  category: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   createdAt: {
     type: Sequelize.DATE,
     allowNull: false,
