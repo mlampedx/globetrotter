@@ -6,24 +6,29 @@ const DisplayHeaders = ({toggleCategory, activeCategory}) => {
   return (
     <Tabs>
       <Tab
+        className = 'all-btn'
+        label = 'All'
+        onClick = {() => toggleCategory('All')}
+      />
+      <Tab
         className = 'pol-btn'
-        label = 'Politics'
-        onClick = {() => toggleCategory('Politics')}
+        label = 'Political'
+        onClick = {() => toggleCategory('Political')}
       />
       <Tab
         className = 'econ-btn'
-        label = 'Economics'
-        onClick = {() => toggleCategory('Economics')}
+        label = 'Economic'
+        onClick = {() => toggleCategory('Economic')}
       />
       <Tab
         className = 'soc-btn'
-        label = 'Society'
-        onClick = {() => toggleCategory('Society')}
+        label = 'Societal'
+        onClick = {() => toggleCategory('Societal')}
       />
       <Tab
         className = 'geo-btn'
-        label = 'Geopolitics'
-        onClick = {() => toggleCategory('Geopolitics')}
+        label = 'Geopolitical'
+        onClick = {() => toggleCategory('Geopolitical')}
       />
       
     </Tabs>
