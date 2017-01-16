@@ -1,4 +1,5 @@
-const React = require('react');
+import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const CountrySelector = ({ toggleCountry, activeCountry, fetchQualData, fetchQuantData }) => {
   return (
@@ -220,16 +221,24 @@ const CountrySelector = ({ toggleCountry, activeCountry, fetchQualData, fetchQua
           <option value="za-zmb">Zambia</option>
           <option value="zi-zwe">Zimbabwe</option>
         </select>
-      <button 
-        className = 'btn-primary' 
-        onClick = { () => fetchQuantData(activeCountry.slice(-3)) } >
-        View quantitative data
-        </button>
-        <button 
-        className = 'btn-primary' 
-        onClick = { () => fetchQualData(activeCountry.slice(0, 2)) } >
-        View qualitative data
-        </button>
+      <ul>
+        <li>
+          <RaisedButton 
+          className = 'country-selector-btn' 
+          backgroundColor = '#2196F3'
+          onClick = { () => fetchQuantData(activeCountry.slice(-3)) } 
+          label = 'View Quantitative Data'
+          />
+        </li>
+        <li>
+          <RaisedButton
+          className = 'country-selector-btn' 
+          backgroundColor = '#2196F3'
+          onClick = { () => fetchQualData(activeCountry.slice(0, 2)) } 
+          label = 'View Qualitative Data'
+          />
+        </li>
+      </ul>
     </div>
   );
 };
