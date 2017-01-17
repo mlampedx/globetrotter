@@ -12,14 +12,19 @@ class Profile extends React.Component {
       favDataRows: [],
       username: document.cookie.split("=").pop(),
     }
+    this.fetchFavRows = this.fetchFavRows.bind(this);
     this.createFavDataRows = this.createFavDataRows.bind(this);
     this.createFavDataRow = this.createFavDataRow.bind(this);
     this.deleteFavDataRow = this.deleteFavDataRow.bind(this);
   }
 
   componentDidMount() {
+    this.fetchFavRows(this.createFavDataRows);
+  }
+
+  fetchFavRows(func) {
     $.post('/favorites', { username: this.state.username })
-      .done(data => { this.createFavDataRows(data); })
+      .done(data => { func(data); })
       .fail(error => { throw new Error(error); });
   }
 
@@ -61,7 +66,7 @@ class Profile extends React.Component {
     $.post('/delete-favorite', { username: this.state.username, name: indicatorToDelete })
       .done(data => {
         browserHistory.push('/favorites');
-        window.location.reload(true);
+        this.fetchFavRows(this.createFavDataRows);
       })
       .fail(err => browserHistory.push('/favorites'));
   }
