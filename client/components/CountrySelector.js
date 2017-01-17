@@ -225,7 +225,7 @@ const CountrySelector = ({ toggleCountry, activeCountry, fetchQualData, fetchQua
         <li>
           <RaisedButton 
           className = 'country-selector-btn' 
-          backgroundColor = '#2196F3'
+          primary = { true }
           onClick = { () => fetchQuantData(activeCountry.slice(-3)) } 
           label = 'View Quantitative Data'
           />
@@ -233,7 +233,7 @@ const CountrySelector = ({ toggleCountry, activeCountry, fetchQualData, fetchQua
         <li>
           <RaisedButton
           className = 'country-selector-btn' 
-          backgroundColor = '#2196F3'
+          primary = { true }
           onClick = { () => fetchQualData(activeCountry.slice(0, 2)) } 
           label = 'View Qualitative Data'
           />
