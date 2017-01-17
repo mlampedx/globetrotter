@@ -14,7 +14,7 @@ const Nav = props => {
     >
       <FlatButton 
         className = 'nav-links'
-        label = { <Link to='/'>Dashboard</Link> }
+        label = { <Link to='/dashboard'>Dashboard</Link> }
       />
       <FlatButton 
         className = 'nav-links'
