@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon ./server/server.js",
     "dev": "webpack-dev-server --hot --inline -w",
-    "build": "./node_modules/.bin/webpack -w"
+    "build": "./node_modules/.bin/webpack -w",
+    "eslint:components": "eslint ./client/components/*"
   },
   "author": "Michael Lampe",
   "license": "ISC",
@@ -49,6 +50,11 @@
   },
   "devDependencies": {
     "css-loader": "^0.25.0",
+    "eslint": "^3.13.1",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-react": "^6.9.0",
     "json-loader": "^0.5.4",
     "nodemon": "^1.11.0",
     "passport-local": "^1.0.0",
