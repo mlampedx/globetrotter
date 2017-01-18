@@ -1,47 +1,35 @@
 import React from 'react';
-import { ReactDOM, render } from 'react-dom';
+import { render } from 'react-dom';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { 
+import {
   Container,
-  CountrySelector,
-  DataColumn, 
-  Display, 
-  DisplayHeaders,
-  FavoriteDataRow,
-  Login, 
-  Nav, 
-  Profile, 
-  QualDataRow, 
-  QuantDataRow, 
-  Register, 
-  Welcome 
+  Display,
+  Login,
+  Profile,
+  Register,
+  Welcome,
 } from './components';
+
 require('./styles.scss');
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-  };
-  render() {
-    return (
-      <MuiThemeProvider>
-        <Router history={browserHistory}>
-            <Route component={Container}>
+const App = () => {
+  return (
+    <MuiThemeProvider>
+      <Router history={browserHistory}>
+        <Route component={Container}>
+          <Route path="/" component={Welcome}>
+            <IndexRoute component={Login} />
+            <Route path="/register" component={Register} />
+          </Route>
 
-            <Route path='/' component={Welcome}>
-              <IndexRoute component={Login} />
-              <Route path='/register' component={Register} />
-            </Route>
-
-            <Route path='/dashboard' component={Display} />
-            <Route path='/favorites' component={Profile} />
+          <Route path="/dashboard" component={Display} />
+          <Route path="/favorites" component={Profile} />
             
-            </Route>
-        </Router>
-      </MuiThemeProvider>
-    )
-  }
-}
+        </Route>
+      </Router>
+    </MuiThemeProvider>
+  );
+};
 
 render(<App />, document.getElementById('root'));
