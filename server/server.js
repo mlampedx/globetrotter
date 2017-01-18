@@ -10,12 +10,12 @@ const { SESSION_SECRET } = require('./../app.config');
 const app = express();
 
 app.use(session({
-	cookieName: 'session',
-	secret: SESSION_SECRET,
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000,
+  cookieName: 'session',
+  secret: SESSION_SECRET,
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
 }));
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -25,12 +25,12 @@ app.use(express.static(path.join(__dirname, './../client')));
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, './../build/index.html'));
 });
-app.get('/build/webpack-bundle.js', (req, res, next) => {
-	return res.status(200).sendFile(path.join(__dirname, './../build/webpack-bundle.js'));
+app.get('/build/webpack-bundle.js', (req, res) => {
+  return res.status(200).sendFile(path.join(__dirname, './../build/webpack-bundle.js'));
 });
 app.get('/logout', (req, res) => {
-	req.logout();
-	res.redirect('/');
+  req.logout();
+  res.redirect('/');
 });
 app.get('*', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, './../build/index.html'));
