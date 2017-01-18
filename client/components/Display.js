@@ -5,13 +5,14 @@ import { Link, browserHistory } from 'react-router';
 import FlatButton from 'material-ui/FlatButton';
 // import Paper from 'material-ui/Paper';
 import { TableRow, TableRowColumn} from 'material-ui/Table';
-import { initQualScraper } from './../utils/factbook-scrape-controller';
 import { 
+  initQualScraper,
   initQuantScraper, 
   polIndicators, 
   socIndicators, 
   econIndicators, 
-  geoIndicators } from './../utils/worldbank-scrape-controller';
+  geoIndicators,
+  parseQuantValue } from './../utils';
 import {
   DisplayHeaders,
   CountrySelector,
@@ -68,11 +69,11 @@ handlePromises(promiseArr) {
 segmentQuantData(jsonArr) {
   const quantData = {};
   jsonArr.forEach(json => {
-    if (json[1]) {
+    if (json[1] && json[1][0].value) {
       let dataItem = { 
         indicator: json[1][0].indicator.id,
         name: json[1][0].indicator.value,
-        value: json[1][0].value,
+        value: parseQuantValue(json[1][0].indicator.value, json[1][0].value),
         year: json[1][0].date,
         country: json[1][0].country.value,
         type: 'Quantitative',
