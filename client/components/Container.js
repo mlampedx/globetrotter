@@ -1,13 +1,17 @@
-import React from 'react';
-import Nav from './Nav'
+import React, { PropTypes } from 'react';
+import Nav from './Nav';
 
-const Container = (props) => { 
+const Container = (props) => {
   return (
-  <div>
-    <Nav />
-    {props.children}
-  </div>
-  )
-}
+    <div>
+      <Nav />
+      {props.children}
+    </div>
+  );
+};
+
+Container.propTypes = {
+  children: React.PropTypes.any.isRequired,
+};
 
 export default Container;

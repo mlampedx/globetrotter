@@ -1,12 +1,11 @@
 import React, {PropTypes} from 'react';
-import {Table, TableBody, TableHeader, TableRow, TableHeaderColumn } from 'material-ui/Table';
+import { Table, TableBody, TableHeader, TableRow, TableHeaderColumn } from 'material-ui/Table';
 
-const FavoritesDashboard = ({ favDataRows, deleteFavDataRow }) => {
-  console.log('favDataRows', favDataRows)
+const FavoritesDashboard = ({ favDataRows }) => {
 
   return (
-    <Table selectable = { false } >
-      <TableHeader displaySelectAll = { false }>
+    <Table selectable={false} >
+      <TableHeader displaySelectAll={false}>
         <TableRow>
           <TableHeaderColumn>COUNTRY</TableHeaderColumn>
           <TableHeaderColumn>CATEGORY</TableHeaderColumn>
@@ -16,7 +15,7 @@ const FavoritesDashboard = ({ favDataRows, deleteFavDataRow }) => {
           <TableHeaderColumn>REMOVE</TableHeaderColumn>
         </TableRow>
       </TableHeader>
-      <TableBody stripedRows = { true } displayRowCheckbox = { false }>
+      <TableBody stripedRows={true} displayRowCheckbox={false}>
         { favDataRows }
       </TableBody>
     </Table>
@@ -24,7 +23,7 @@ const FavoritesDashboard = ({ favDataRows, deleteFavDataRow }) => {
 };
 
 FavoritesDashboard.propTypes = {
-  
+  favDataRows: React.PropTypes.array,
 };
 
 export default FavoritesDashboard;
