@@ -1,5 +1,9 @@
-$primFont: Helvetica;
+$primFont: 'Open-Sans', 'sans-serif';
 $primBg: #263238;
+
+* {
+  font-family: $primFont;
+}
 
 li {
   list-style-type: none;
@@ -27,13 +31,17 @@ ul {
 }
 
 .login-title {
-  font-family: 'Helvetica Neue', $primFont;
   font-size: 32px;
   text-align: center;
 }
 
 .login-field {
   margin: 0.3em;
+}
+
+.login-span {
+  display: flex;
+  flex-direction: row;
 }
 
 .login-btn {
@@ -46,10 +54,14 @@ ul {
   margin: 0.5em;
 }
 
+.country-selector-span {
+  align-content: center;
+  height: 4em;
+}
+
 .display {
   background: $primBg;
   border: 2px solid black;
-  font-family: $primFont;
   padding: 10px;
 }
 
@@ -66,18 +78,12 @@ ul {
 .outer-div {
   display: grid;
 }
-
-.country-selector-btn {
-  margin: 0.2em;
-}
     
 .data-label {
   color: white;
-  font-family: $primFont;
   text-align: center;
 }
 
 .data-row {
   color: white;
-  font-family: $primFont;
 }
