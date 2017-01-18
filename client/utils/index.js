@@ -5,9 +5,8 @@ function parseQuantValue(name, value) {
   if (name.includes('$')) {
     return value.includes('-') ?
      `-$${numberWithCommas(intToFloat(value.slice(1), 2))}` :
-     `$${numberWithCommas(intToFloat(value, 2))}`
-  }
-  else if (name.includes('%')) {
+     `$${numberWithCommas(intToFloat(value, 2))}`;
+  } else if (name.includes('%')) {
     return `${intToFloat(value, 2)}%`;
   }
   return `${numberWithCommas(intToFloat(value, 2))}`;
@@ -24,4 +23,12 @@ function intToFloat(num, decPlaces) {
     Number(num).toFixed(decPlaces);
 }
 
-module.exports = { initQualScraper, initQuantScraper, polIndicators, socIndicators, econIndicators, geoIndicators, parseQuantValue };
+module.exports = {
+  initQualScraper,
+  initQuantScraper,
+  polIndicators,
+  socIndicators,
+  econIndicators,
+  geoIndicators,
+  parseQuantValue,
+};
