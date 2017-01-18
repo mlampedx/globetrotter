@@ -3,16 +3,16 @@ const { USERNAME, PASSWORD } = require('./../app.config');
 
 const sequelize = new Sequelize('globetrotter', USERNAME, PASSWORD, {
   host: 'localhost',
-  dialect: 'postgres'
+  dialect: 'postgres',
 });
 
 sequelize
   .authenticate()
-  .then(function (err) {
+  .then(() => {
     console.log('Connection has been established successfully.');
   })
-  .catch(function (err) {
-    console.log('Unable to connect to the database:', err);
+  .catch((err) => {
+    throw new Error(err);
   });
 
 module.exports = sequelize;

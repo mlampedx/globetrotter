@@ -11,7 +11,7 @@ const attributes = {
     allowNull: false,
     unique: true,
     validate: {
-      isEmail: true
+      isEmail: true,
     },
   },
   username: {
@@ -29,7 +29,7 @@ const attributes = {
   salt: {
     type: Sequelize.STRING,
   },
-  createdAt: { 
+  createdAt: {
     type: Sequelize.DATE,
     allowNull: false,
   },
@@ -41,6 +41,6 @@ const attributes = {
 
 const options = {
   freezeTableName: true,
-}
+};
 
 module.exports = { attributes, options };

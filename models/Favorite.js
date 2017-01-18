@@ -13,7 +13,7 @@ const attributes = {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  year: { 
+  year: {
     type: Sequelize.STRING,
     allowNull: true,
   },
@@ -41,6 +41,6 @@ const attributes = {
 
 const options = {
   freezeTableName: true,
-}
+};
 
 module.exports = { attributes, options };
