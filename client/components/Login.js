@@ -16,12 +16,14 @@ const Login = ({ verifyUser }) => {
               hintText="Username"
               name="username"
               type="text"
+              floatingLabelText="Username"
             />
             <TextField
               className="login-field"
               hintText="Password"
               name="password"
               type="password"
+              floatingLabelText="Password"
             />
             <RaisedButton
               className="login-btn"

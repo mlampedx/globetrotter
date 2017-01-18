@@ -17,24 +17,28 @@ const Register = ({ registerUser }) => {
               hintText="Username"
               name="username"
               type="text"
+              floatingLabelText="Username"
             />
             <TextField
               className="login-field"
               hintText="Email"
               name="email"
               type="email"
+              floatingLabelText="Email"
             />
             <TextField
               className="login-field"
               hintText="Password"
               name="password"
               type="password"
+              floatingLabelText="Password"
             />
             <TextField
               className="login-field"
               hintText="Confirm Password"
               name="password2"
               type="password"
+              floatingLabelText="Confirm Password"
             />
             <RaisedButton
               className="login-btn"
