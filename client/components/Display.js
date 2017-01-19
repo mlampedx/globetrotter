@@ -10,7 +10,8 @@ import {
   socIndicators,
   econIndicators,
   geoIndicators,
-  parseQuantValue } from './../utils';
+  parseQuantValue,
+} from './../utils';
 import {
   DisplayHeaders,
   CountrySelector,
@@ -21,7 +22,8 @@ class Display extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeCountry: 'us-usa',
+      activeCountry: 'United States',
+      activeCountryCode: 'us-usa',
       activeCategory: 'All',
       qualDataCache: {},
       quantDataCache: {},
@@ -50,7 +52,7 @@ class Display extends React.Component {
   }
 
   toggleCountry(e) {
-    this.setState({ activeCountry: e.target.value });
+    this.setState({ activeCountryCode: e.target.value });
   }
 
   handlePromises(promiseArr) {
@@ -89,7 +91,7 @@ class Display extends React.Component {
       }
     });
     this.cacheQuantData(quantData);
-    this.renderQuantData(this.state.activeCountry.slice(-3));
+    this.renderQuantData(this.state.activeCountryCode.slice(-3));
   }
 
   segmentQualData(qualData) {
@@ -109,17 +111,17 @@ class Display extends React.Component {
   }
 
   cacheQualData(qualDataToCache) {
-    const countryCode = this.state.activeCountry.slice(0, 2);
+    const countryCode = this.state.activeCountryCode.slice(0, 2);
     const updatedQualCache = Object.assign({}, this.state.qualDataCache, {
       [countryCode]: qualDataToCache,
     });
     this.setState({
       qualDataCache: updatedQualCache,
-    }, this.renderQualData(this.state.activeCountry.slice(0, 2), qualDataToCache));
+    }, () => this.renderQualData(this.state.activeCountryCode.slice(0, 2), qualDataToCache));
   }
 
   cacheQuantData(quantDataToCache) {
-    const countryCode = this.state.activeCountry.slice(-3);
+    const countryCode = this.state.activeCountryCode.slice(-3);
     const updatedQuantCache = Object.assign({}, this.state.quantDataCache, {
       [countryCode]: quantDataToCache,
     });
@@ -141,25 +143,25 @@ class Display extends React.Component {
     const { type, category, name, value = 'No data available', year = 2016 } = statistic;
 
     return (
-      <TableRow key={`${type}-${category.slice(3)}-R${index}`} index={index}>
+      <TableRow key={`${this.state.activeCountryCode}-${category.slice(0, 3)}-R${index}`} index={index}>
         <TableRowColumn
-          key={`${this.activeCountry}${this.activeCategory}${index}`}
+          key={`${this.state.activeCountryCode}${index}`}
         >{ category }
         </TableRowColumn>
         <TableRowColumn
-          key={`${this.activeCountry}${this.activeCategory}${name}`}
+          key={`${this.state.activeCountryCode}${name}`}
         >{ name }
         </TableRowColumn>
         <TableRowColumn
-          key={`${this.activeCountry}${this.activeCategory}${value.slice(0, 5)}`}
+          key={`${this.state.activeCountryCode}${value.slice(0, 5)}`}
         >{ value }
         </TableRowColumn>
         <TableRowColumn
-          key={`${this.activeCountry}${this.activeCategory}${year}`}
+          key={`${this.state.activeCountryCode}${year}`}
         >{ year }
         </TableRowColumn>
         <TableRowColumn
-          key={`${this.activeCountry}${this.activeCategory}${index}fav`}
+          key={`${this.state.activeCountryCode}${index}fav`}
         >
           <FlatButton
             label="Favorite"
@@ -182,8 +184,8 @@ class Display extends React.Component {
     let indicatorToSave;
 
     type === 'Qualitative' ?
-      indicatorToSave = this.state.qualDataCache[this.state.activeCountry.slice(0, 2)][categoryMap[category]][i] :
-      indicatorToSave = this.state.quantDataCache[this.state.activeCountry.slice(-3)][categoryMap[category]][i];
+      indicatorToSave = this.state.qualDataCache[this.state.activeCountryCode.slice(0, 2)][categoryMap[category]][i] :
+      indicatorToSave = this.state.quantDataCache[this.state.activeCountryCode.slice(-3)][categoryMap[category]][i];
     
     $.post('/add-favorite', {
       username: this.state.username,
@@ -209,6 +211,7 @@ class Display extends React.Component {
     const qualDataToRender = this.state.qualDataCache[countryCode] || qualData;
     const qualRowsToRender = this.createDataRows(qualDataToRender);
     const newState = Object.assign({}, this.state, {
+      activeCountry: qualDataToRender.pol[0].country,
       activeQualRows: qualRowsToRender,
     });
     this.setState(newState);
@@ -218,6 +221,7 @@ class Display extends React.Component {
     const quantDataToRender = this.state.quantDataCache[countryCode];
     const quantRowsToRender = this.createDataRows(quantDataToRender);
     const newState = Object.assign({}, this.state, {
+      activeCountry: quantDataToRender.pol[0].country,
       activeQuantRows: quantRowsToRender,
     });
     this.setState(newState);
@@ -228,6 +232,7 @@ class Display extends React.Component {
       <div className="display">
         <CountrySelector
           activeCountry={this.state.activeCountry}
+          activeCountryCode={this.state.activeCountryCode}
           toggleCountry={this.toggleCountry}
           fetchQualData={this.fetchQualData}
           fetchQuantData={this.fetchQuantData}
