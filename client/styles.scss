@@ -56,7 +56,13 @@ ul {
 
 .country-selector-span {
   align-content: center;
+  float: right;
   height: 4em;
+}
+
+.country-name-header {
+  color: white;  
+  float: left;
 }
 
 .display {
