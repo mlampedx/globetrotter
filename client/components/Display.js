@@ -52,7 +52,11 @@ class Display extends React.Component {
   }
 
   toggleCountry(e) {
-    this.setState({ activeCountryCode: e.target.value });
+    this.setState({
+      activeCountryCode: e.target.value,
+      activeQuantRows: {},
+      activeQualRows: {},
+    });
   }
 
   handlePromises(promiseArr) {
