@@ -3,7 +3,7 @@ import {Table, TableBody, TableHeader, TableRow, TableHeaderColumn } from 'mater
 
 const DataDashboard = ({ qualPolDataRows, qualEconDataRows, qualSocDataRows, qualGeoDataRows, quantPolDataRows, quantEconDataRows, quantSocDataRows, quantGeoDataRows }) => {
   return (
-    <Table selectable={false} onCellClick={(row, column) => console.log(row, column)} >
+    <Table selectable={false}>
       <TableHeader displaySelectAll={false}>
         <TableRow>
           <TableHeaderColumn>CATEGORY</TableHeaderColumn>
