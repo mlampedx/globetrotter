@@ -3,7 +3,10 @@ import { browserHistory } from 'react-router';
 import $ from 'jquery';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
-import FavoritesDashboard from './FavoritesDashboard';
+import {
+  ExpandableDataRow,
+  FavoritesDashboard,
+} from './index';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -67,6 +70,10 @@ class Profile extends React.Component {
         <TableRowColumn
           key={`fav${country}${category}${index}fav`}
         >
+          <ExpandableDataRow
+            name={name}
+            value={value}
+          />
           <FlatButton
             label='DELETE'
             secondary={true}
