@@ -16,6 +16,7 @@ import {
   DisplayHeaders,
   CountrySelector,
   DataDashboard,
+  ExpandableDataRow,
 } from './index';
 
 class Display extends React.Component {
@@ -53,6 +54,7 @@ class Display extends React.Component {
 
   toggleCountry(e) {
     this.setState({
+      activeCategory: 'All',
       activeCountryCode: e.target.value,
       activeQuantRows: {},
       activeQualRows: {},
@@ -145,7 +147,7 @@ class Display extends React.Component {
   
   createDataRow(statistic, index) {
     const { type, category, name, value = 'No data available', year = 2016 } = statistic;
-
+    console.log(<ExpandableDataRow />)
     return (
       <TableRow key={`${this.state.activeCountryCode}-${category.slice(0, 3)}-R${index}`} index={index}>
         <TableRowColumn
@@ -167,6 +169,10 @@ class Display extends React.Component {
         <TableRowColumn
           key={`${this.state.activeCountryCode}${index}fav`}
         >
+          <ExpandableDataRow
+            name={name}
+            value={value}
+          />
           <FlatButton
             label="Favorite"
             primary={true}
