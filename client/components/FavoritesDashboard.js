@@ -12,7 +12,7 @@ const FavoritesDashboard = ({ favDataRows }) => {
           <TableHeaderColumn>INDICATOR</TableHeaderColumn>
           <TableHeaderColumn>VALUE</TableHeaderColumn>
           <TableHeaderColumn>YEAR</TableHeaderColumn>
-          <TableHeaderColumn>REMOVE</TableHeaderColumn>
+          <TableHeaderColumn>OPTIONS</TableHeaderColumn>
         </TableRow>
       </TableHeader>
       <TableBody stripedRows={true} displayRowCheckbox={false}>
