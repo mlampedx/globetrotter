@@ -22,7 +22,6 @@ export default class ExpandableDataRow extends Component {
   };
 
   render() {
-    console.log('rendering')
     const actions = [
       <RaisedButton
         label="Close"
