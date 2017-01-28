@@ -147,7 +147,6 @@ class Display extends React.Component {
   
   createDataRow(statistic, index) {
     const { type, category, name, value = 'No data available', year = 2016 } = statistic;
-    console.log(<ExpandableDataRow />)
     return (
       <TableRow key={`${this.state.activeCountryCode}-${category.slice(0, 3)}-R${index}`} index={index}>
         <TableRowColumn
@@ -175,7 +174,7 @@ class Display extends React.Component {
           />
           <FlatButton
             label="Favorite"
-            primary={true}
+            primary
             onClick={() => this.saveFavoriteIndicator(index, type, category)}
           />
         </TableRowColumn>
@@ -196,8 +195,8 @@ class Display extends React.Component {
     type === 'Qualitative' ?
       indicatorToSave = this.state.qualDataCache[this.state.activeCountryCode.slice(0, 2)][categoryMap[category]][i] :
       indicatorToSave = this.state.quantDataCache[this.state.activeCountryCode.slice(-3)][categoryMap[category]][i];
-    
-    $.post('/add-favorite', {
+
+    const favorite = {
       username: this.state.username,
       name: indicatorToSave.name,
       value: indicatorToSave.value,
@@ -205,9 +204,15 @@ class Display extends React.Component {
       year: indicatorToSave.year,
       type: indicatorToSave.type,
       category: indicatorToSave.category,
-    })
+    };
+
+    const localFavDataRows = JSON.parse(localStorage.getItem('favDataRows')) || [];
+    localFavDataRows.push(favorite);
+    localStorage.setItem('favDataRows', JSON.stringify(localFavDataRows));
+    
+    $.post('/add-favorite', favorite)
       .done(() => browserHistory.push('/dashboard'))
-      .fail((err) => { 
+      .fail((err) => {
         browserHistory.push('/dashboard');
         throw new Error(err);
       });
