@@ -26,11 +26,13 @@ class Profile extends React.Component {
   }
 
   fetchFavRows(func) {
-    $.post('/favorites', { 
-      username: this.state.username,
-    })
-      .done((data) => { func(data); })
-      .fail((error) => { throw new Error(error); });
+    JSON.parse(localStorage.getItem('favDataRows')) ?
+      this.createFavDataRows(JSON.parse(localStorage.getItem('favDataRows'))) :
+      $.post('/favorites', { 
+        username: this.state.username,
+      })
+        .done((data) => { func(data); })
+        .fail((error) => { throw new Error(error); });
   }
 
   createFavDataRows(favData) {
@@ -93,6 +95,9 @@ class Profile extends React.Component {
     })
       .done(() => {
         browserHistory.push('/favorites');
+        const localFavDataRows = JSON.parse(localStorage.getItem('favDataRows'));
+        localFavDataRows.splice(i, 1);
+        localStorage.setItem('favDataRows', JSON.stringify(localFavDataRows));
         this.fetchFavRows(this.createFavDataRows);
       })
       .fail((err) => {
