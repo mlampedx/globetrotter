@@ -18,6 +18,12 @@ function capitalizeFirstLetter(str) {
      'No data available.';
 }
 
+function convertPlusesToSemiColons(str) {
+  return str ?
+    str.split(' ++').join(';') :
+    'No data available.';
+}
+
 const scrapeControllerPol = (data) => {
   const country = data['Government']['Country name']['conventional short form']['text'];
   const output = [];
@@ -51,7 +57,7 @@ const scrapeControllerPol = (data) => {
   }
 
   if (data['Government']['Political parties and leaders'] !== undefined) {
-    output.push({ country, type: 'Qualitative', category: 'Political', name: 'Political Parties and Leaders', value: capitalizeFirstLetter(data['Government']['Political parties and leaders']['text']), year: 2016 });
+    output.push({ country, type: 'Qualitative', category: 'Political', name: 'Political Parties and Leaders', value: capitalizeFirstLetter(convertPlusesToSemiColons(data['Government']['Political parties and leaders']['text'])), year: 2016 });
   }
 
   return output;
