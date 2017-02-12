@@ -5,7 +5,6 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const Register = ({ registerUser }) => {
-
   return (
     <div className="login-div">
       <Paper className="login-form" zDepth={3}>
