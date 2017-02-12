@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 import $ from 'jquery';
 
 class Welcome extends Component {
+  static propTypes = {
+    children: PropTypes.object.isRequired,
+  };
   
-  verifyUser(event) {
+  verifyUser = (event) => {
     event.preventDefault();
     const username = event.target.elements[0].value;
     const password = event.target.elements[1].value;
@@ -21,7 +24,7 @@ class Welcome extends Component {
       });
   }
 
-  registerUser(event) {
+  registerUser = (event) => {
     event.preventDefault();
     const username = event.target.elements[0].value;
     const email = event.target.elements[1].value;
@@ -30,7 +33,7 @@ class Welcome extends Component {
 
     // post request to register a new user, redirects to signup page for invalid inputs
     $.post('/register', {
-      username, 
+      username,
       email,
       password,
       password2,
@@ -42,7 +45,7 @@ class Welcome extends Component {
       });
   }
 
-  render() {
+  render = () => {
     let children = React.Children.map(this.props.children, child => {
       return React.cloneElement(child, {
         verifyUser: this.verifyUser,
@@ -56,10 +59,6 @@ class Welcome extends Component {
       </div>
     );
   }
-}
-
-Welcome.propTypes = {
-  children: React.PropTypes.any,
 }
 
 export default Welcome;
