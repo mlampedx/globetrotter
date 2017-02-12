@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import { Table, TableBody, TableHeader, TableRow, TableHeaderColumn } from 'material-ui/Table';
 
 const FavoritesDashboard = ({ favDataRows }) => {
-
   return (
     <Table selectable={false} >
       <TableHeader displaySelectAll={false}>
