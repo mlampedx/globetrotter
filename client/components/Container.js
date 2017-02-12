@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import Nav from './Nav';
 
-const Container = (props) => {
+const Container = ({ children }) => {
   return (
     <div>
       <Nav />
-      {props.children}
+      {children}
     </div>
   );
 };
