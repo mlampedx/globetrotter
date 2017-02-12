@@ -1,27 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
 export default class ExpandableDataRow extends Component {
-  constructor(props) {
-    super(props)
-      this.state = {
-        open: false,
-      };
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+  state = {
+    open: false,
+  };
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
   }
 
-  handleOpen() {
+  handleOpen = () => {
     this.setState({open: true});
   };
 
-  handleClose() {
+  handleClose = () => {
     this.setState({open: false});
   };
 
-  render() {
+  render = () => {
     const actions = [
       <RaisedButton
         label="Close"
