@@ -20,39 +20,22 @@ import {
 } from './index';
 
 class Display extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeCountry: 'United States',
-      activeCountryCode: 'us-usa',
-      activeCategory: 'All',
-      qualDataCache: {},
-      quantDataCache: {},
-      activeQuantRows: {},
-      activeQualRows: {},
-      username: document.cookie.split('=').pop(),
-    };
-    this.toggleCategory = this.toggleCategory.bind(this);
-    this.toggleCountry = this.toggleCountry.bind(this);
-    this.cacheQualData = this.cacheQualData.bind(this);
-    this.cacheQuantData = this.cacheQuantData.bind(this);
-    this.handlePromises = this.handlePromises.bind(this);
-    this.segmentQuantData = this.segmentQuantData.bind(this);
-    this.segmentQualData = this.segmentQualData.bind(this);
-    this.createDataRows = this.createDataRows.bind(this);
-    this.createDataRow = this.createDataRow.bind(this);
-    this.renderQualData = this.renderQualData.bind(this);
-    this.renderQuantData = this.renderQuantData.bind(this);
-    this.fetchQualData = this.fetchQualData.bind(this);
-    this.fetchQuantData = this.fetchQuantData.bind(this);
-    this.saveFavoriteIndicator = this.saveFavoriteIndicator.bind(this);
-  }
+  state = {
+    activeCountry: 'United States',
+    activeCountryCode: 'us-usa',
+    activeCategory: 'All',
+    qualDataCache: {},
+    quantDataCache: {},
+    activeQuantRows: {},
+    activeQualRows: {},
+    username: document.cookie.split('=').pop(),
+  };
 
-  toggleCategory(category) {
+  toggleCategory = (category) => {
     this.setState({ activeCategory: category });
   }
 
-  toggleCountry(e) {
+  toggleCountry = (e) => {
     this.setState({
       activeCategory: 'All',
       activeCountryCode: e.target.value,
@@ -61,7 +44,7 @@ class Display extends React.Component {
     });
   }
 
-  handlePromises(promiseArr) {
+  handlePromises = (promiseArr) => {
     Promise.all(promiseArr).then((jsonArr) => {
       this.segmentQuantData(jsonArr);
     }).catch((err) => {
@@ -69,7 +52,7 @@ class Display extends React.Component {
     });
   }
 
-  segmentQuantData(jsonArr) {
+  segmentQuantData = (jsonArr) => {
     const quantData = {};
     jsonArr.forEach((json) => {
       if (json[1] && json[1][0].value) {
@@ -100,23 +83,23 @@ class Display extends React.Component {
     this.renderQuantData(this.state.activeCountryCode.slice(-3));
   }
 
-  segmentQualData(qualData) {
+  segmentQualData = (qualData) => {
     this.cacheQualData(qualData);
   }
 
-  fetchQualData(countryCode) {
+  fetchQualData = (countryCode) => {
     this.state.qualDataCache[countryCode] ?
       this.renderQualData(countryCode) :
       this.segmentQualData(initQualScraper(countryCode));
   }
 
-  fetchQuantData(countryCode) {
+  fetchQuantData = (countryCode) => {
     this.state.quantDataCache[countryCode] ?
       this.renderQuantData(countryCode) :
       this.handlePromises(initQuantScraper(countryCode));
   }
 
-  cacheQualData(qualDataToCache) {
+  cacheQualData = (qualDataToCache) => {
     const countryCode = this.state.activeCountryCode.slice(0, 2);
     const updatedQualCache = Object.assign({}, this.state.qualDataCache, {
       [countryCode]: qualDataToCache,
@@ -126,7 +109,7 @@ class Display extends React.Component {
     }, () => this.renderQualData(this.state.activeCountryCode.slice(0, 2), qualDataToCache));
   }
 
-  cacheQuantData(quantDataToCache) {
+  cacheQuantData = (quantDataToCache) => {
     const countryCode = this.state.activeCountryCode.slice(-3);
     const updatedQuantCache = Object.assign({}, this.state.quantDataCache, {
       [countryCode]: quantDataToCache,
@@ -136,7 +119,7 @@ class Display extends React.Component {
     });
   }
 
-  createDataRows(data) {
+  createDataRows = (data) => {
     const dataRows = {};
     dataRows.pol = data.pol.map((statistic, i) => this.createDataRow(statistic, i));
     dataRows.econ = data.econ.map((statistic, i) => this.createDataRow(statistic, i));
@@ -145,7 +128,7 @@ class Display extends React.Component {
     return dataRows;
   }
   
-  createDataRow(statistic, index) {
+  createDataRow = (statistic, index) => {
     const { type, category, name, value = 'No data available', year = 2016 } = statistic;
     return (
       <TableRow key={`${this.state.activeCountryCode}-${category.slice(0, 3)}-R${index}`} index={index}>
@@ -182,7 +165,7 @@ class Display extends React.Component {
     );
   }
 
-  saveFavoriteIndicator(i, type, category) {
+  saveFavoriteIndicator = (i, type, category) => {
     const categoryMap = {
       Political: 'pol',
       Economic: 'econ',
@@ -218,11 +201,11 @@ class Display extends React.Component {
       });
   }
 
-  removeCookies() {
+  removeCookies = () => {
     document.cookie = `${this.username}=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
   }
 
-  renderQualData(countryCode, qualData) {
+  renderQualData = (countryCode, qualData) => {
     const qualDataToRender = this.state.qualDataCache[countryCode] || qualData;
     const qualRowsToRender = this.createDataRows(qualDataToRender);
     const newState = Object.assign({}, this.state, {
@@ -232,7 +215,7 @@ class Display extends React.Component {
     this.setState(newState);
   }
 
-  renderQuantData(countryCode) {
+  renderQuantData = (countryCode) => {
     const quantDataToRender = this.state.quantDataCache[countryCode];
     const quantRowsToRender = this.createDataRows(quantDataToRender);
     const newState = Object.assign({}, this.state, {
@@ -242,7 +225,7 @@ class Display extends React.Component {
     this.setState(newState);
   }
 
-  render() {
+  render = () => {
     return (
       <div className="display">
         <CountrySelector
