@@ -9,23 +9,16 @@ import {
 } from './index';
 
 class Profile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      favDataRows: [],
-      username: document.cookie.split("=").pop(),
-    };
-    this.fetchFavRows = this.fetchFavRows.bind(this);
-    this.createFavDataRows = this.createFavDataRows.bind(this);
-    this.createFavDataRow = this.createFavDataRow.bind(this);
-    this.deleteFavDataRow = this.deleteFavDataRow.bind(this);
-  }
+  state = {
+    favDataRows: [],
+    username: document.cookie.split("=").pop(),
+  };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.fetchFavRows(this.createFavDataRows);
   }
 
-  fetchFavRows(func) {
+  fetchFavRows = (func) => {
     JSON.parse(localStorage.getItem('favDataRows')) ?
       this.createFavDataRows(JSON.parse(localStorage.getItem('favDataRows'))) :
       $.post('/favorites', { 
@@ -35,7 +28,7 @@ class Profile extends React.Component {
         .fail((error) => { throw new Error(error); });
   }
 
-  createFavDataRows(favData) {
+  createFavDataRows = (favData) => {
     const favDataRows = favData.map((statistic, i) => {
       return this.createFavDataRow(statistic, i);
     });
@@ -45,7 +38,7 @@ class Profile extends React.Component {
     this.setState(newState);
   }
   
-  createFavDataRow(statistic, index) {
+  createFavDataRow = (statistic, index) => {
     const { country, type, category, name, value = 'No data available', year = 2016 } = statistic;
 
     return (
@@ -86,7 +79,7 @@ class Profile extends React.Component {
     );
   }
 
-  deleteFavDataRow(i) {
+  deleteFavDataRow = (i) => {
     const indicatorToDelete = this.state.favDataRows[i].props.children[2]._shadowChildren;
 
     $.post('/delete-favorite', {
@@ -106,7 +99,7 @@ class Profile extends React.Component {
       });
   }
   
-  render() {
+  render = () => {
     return (
       <div className='favorites'>
         <FavoritesDashboard
